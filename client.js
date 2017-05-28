@@ -79,6 +79,7 @@ class Client {
 					if (typeof config === 'string') config = JSON.parse(config); // encoded twice by the server
 					if (config.host) {
 						if (config.id) serverId = config.id;
+						config.port = 8000;
 						this.client.connect('ws://' + (config.host === 'showdown' ? 'sim.smogon.com' : config.host) + ':' + (config.port || 8000) + '/showdown/' + Math.floor(Math.random() * 1000) + '/' + string + '/websocket');
 						return;
 					}
