@@ -60,12 +60,17 @@ let commands = {
 	
 	commands: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		this.say("https://hastebin.com/zebacaxesu.vbs");
+		this.say("https://hastebin.com/napopihubi.diff");
 	},
 	
-	wotd: function (target, room, user) {
+	git: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		Client.send('scrabble|!addhtmlbox <img src="http://i.imgur.com/RyoZ1GA.png" height="89" width="160"><div>ˈ<b> Word of the Day:</b> /äˌä/ (Noun) basaltic lava forming very rough jagged masses with a light frothy texture. <b>Scrabble Points:</b> 2 </div>');
+		this.say("https://github.com/DatSpookTho/Pwogg");
+	},
+	
+	wotw: function (target, room, user) {
+		if (room !== user && !user.hasRank(room, '+')) return;
+		Client.send('scrabble|!addhtmlbox <img src="http://i.imgur.com/MhUaWqH.png" height="95" width="320"><div>ˈ<b> Word of the Week:</b> /ik-see-uh/ (Noun) Any of the genus Ixia of cormous plants native to South Africa. <b>Scrabble Points:</b> 7 in Crosswords Arena, 11 in Scrabble </div>');
 	},
 	
 	tour: function (target, room, user) {
@@ -146,6 +151,11 @@ let commands = {
 	azu: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		Client.send("scrabble|!dt Celebi");
+	},
+	
+	sty: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		Client.send("scrabble|!dt Drifblim");
 	},
 	
 	// Storage commands
