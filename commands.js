@@ -80,6 +80,11 @@ let commands = {
 
 	},
 	
+	say: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		room.say(target); 
+	},
+	
 	tourstart: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '%')) return;
 		Client.send('scrabble|/tour start');
