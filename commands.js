@@ -73,24 +73,32 @@ let commands = {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		this.say("https://github.com/DatSpookTho/Pwogg");
 	},
-	
-	wotw: function (target, room, user) {
-        if (room !== user && !user.hasRank(room, '+')) return;
-        Client.send('scrabble|!addhtmlbox <img src="http://i.imgur.com/og6yy9W.jpg" height="65" width="400"><div>ˈ<b> Word of the Week:</b> /kir-tan/ (Noun) A call-and-response chant performed in India's devotional traditions. <b>Scrabble Points:</b> 11 in Crosswords Arena, 10 in Scrabble </div>');
-    },
-	
-	tour: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '%')) return;
-		this.say('/tour create gen 7 ubers, elimination');
-		this.say('/wall This is a Scrabblemons Tour! Only use a Scrabblemons team! Info on Scrabblemons can be found here: http://scrabble-ps.weebly.com/scrabble-mons-guide.html. Using banned Pokemon is cheating and ia strictly prohibited, you will be disqualified if you are caught cheating.');
 
+	scrabmonstour: function (target, room, user) {
+        if (room !== user && !user.hasRank(room, '+')) return;
+        Client.send('scrabble|/tour create gen 7 ubers, elimination');
+        Client.send('scrabble|/tour banlist Aegislash, Arceus, Blaziken, Darkrai, Deoxys, Dialga, Genesect, Gengar-Mega, Giratina, Groudon, Ho-Oh, Kangaskhan-Mega, Kyogre, Kyurem-White, Lucario-Mega, Lugia, Lunala, Metagross-Mega, Mewtwo, Palkia, Pheromosa, Rayquaza, Reshiram, Salamence-Mega, Shaymin-Sky, Solgaleo, Xerneas, Yveltal, Zekrom, Zygarde-Complete');
+    },
+   
+    tourofficial: function (target, room, user) {
+        if (room !== user && !user.hasRank(room, '+')) return;
+		Client.send('scrabble|/tour create gen 7 ubers, elimination');
+		Client.send("scrabble|/wall Hosting a scrabgame of Official Scrabblemons Tour! Click the join button to participate! Check http://scrabble-ps.weebly.com/scrabble-mons-guide.html if you don't know how to play!");
+        Client.send('scrabble|/tour banlist Aegislash, Arceus, Blaziken, Darkrai, Deoxys, Dialga, Genesect, Gengar-Mega, Giratina, Groudon, Ho-Oh, Kangaskhan-Mega, Kyogre, Kyurem-White, Lucario-Mega, Lugia, Lunala, Metagross-Mega, Mewtwo, Palkia, Pheromosa, Rayquaza, Reshiram, Salamence-Mega, Shaymin-Sky, Solgaleo, Xerneas, Yveltal, Zekrom, Zygarde-Complete');
+        Client.send('scrabble|/tour name Scrabblemons');
 	},
-	
-	tourstart: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '%')) return;
-		this.say('/tour start');
-		this.say('/wall Good luck to everyone!');
+   
+    tourstart: function (target, room, user) {
+        if (room !== user && !user.hasRank(room, '+')) return;
+        Client.send('scrabble|/tour start');
+        Client.send('scrabble|/wall The host will give you your words shortly!');
+		Client.send('scrabble|/tour scouting off');
 	},
+   
+    scrabtour: function (target, room, user) {
+        if (room !== user && !user.hasRank(room, '+')) return;
+        Client.send('scrabble|/wall Hosting a scrabgame of Official Scrabble Tour! It will be ran through challonge and the host will post a link after signups are closed! Do /me in to join!')
+    },
 	
 	scrabword: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
