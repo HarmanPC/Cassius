@@ -27,7 +27,7 @@ let commands = {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say(Config.username + " code by sirDonovan: https://github.com/sirDonovan/Cassius with additions made by Spooktune~");
 	},
-
+	
 	beep: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("boop");
@@ -37,20 +37,15 @@ let commands = {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("/me boops " + target);
 	},
-
+	
 	intro: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("/addhtmlbox <div>Welcome to Scrabble!<li> <a href='http://scrabble-ps.weebly.com'>PS Scrabble Website</a></li> <li><a href='https://en.crosswordsarena.com/'>Play Scrabble!</a></li></ul></div>");
+		room.say("scrabble|/addhtmlbox <div>Welcome to Scrabble!<li> <a href='http://scrabble-ps.weebly.com'>PS Scrabble Website</a></li> <li><a href='https://en.crosswordsarena.com/'>Play Scrabble!</a></li></ul></div>");
 	},
 
 	roomdesc: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		room.say("/addhtmlbox <div>Play Scrabble with friends, join Scrabble tournaments, and compete in the exciting new Scrabblemons metagame!</div>");
-	},
-	
-	pwogg: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		room.say("What will Snap break this time?");
 	},
 	
 	nt: function (target, room, user) {
@@ -68,44 +63,32 @@ let commands = {
 		room.say("/me dabs");
 	},
 	
-	argdab: function (target, room, user) {
-        if (room !== user && !user.hasRank(room, '+')) return;
-        room.say("/me dabs on " + target);
-    },
-	
-	argdunk: function (target, room, user) {
+	commands: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say("/me dunks on " + target);
+		room.say("https://hastebin.com/napopihubi.diff");
 	},
 	
 	git: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("https://github.com/DatSpookTho/Pwogg");
 	},
-
-	scrabmonstour: function (target, room, user) {
-        if (room === user || !user.hasRank(room, '+')) return;
-        room.say('/tour create gen 7 ou, elimination');
-        room.say('/tour name Scrabblemons');
+	
+	wotw: function (target, room, user) {
+		if (room !== user && !user.hasRank(room, '+')) return;
+		Client.send('scrabble|!addhtmlbox <img src="http://i.imgur.com/MhUaWqH.png" height="95" width="320"><div>ˈ<b> Word of the Week:</b> /ik-see-uh/ (Noun) Any of the genus Ixia of cormous plants native to South Africa. <b>Scrabble Points:</b> 7 in Crosswords Arena, 11 in Scrabble </div>');
 	},
-   
-    tourofficial: function (target, room, user) {
-        if (room === user || !user.hasRank(room, '%')) return;
-		room.say('/tour create gen 7 ou, elimination');
-		room.say('/tour name Scrabblemons');
-		room.say("/wall Hosting a scrabgame of Official Scrabblemons Tour! Click the join button to participate! Check http://scrabble-ps.weebly.com/scrabble-mons-guide.html if you don't know how to play!");
-    },
-   
-    tourstart: function (target, room, user) {
+	
+	tour: function (target, room, user) {
+		if (room === user || !user.hasRank(room, '%')) return;
+		room.say('/tour create gen 7 ubers, elimination');
+		room.say('/wall This is a Scrabblemons Tour! Only use a Scrabblemons team! Info on Scrabblemons can be found here: http://scrabble-ps.weebly.com/scrabble-mons-guide.html. Using banned Pokemon is cheating and ia strictly prohibited, you will be disqualified if you are caught cheating.');
+	},
+	
+	tourstart: function (target, room, user) {
 		if (room === user || !user.hasRank(room, '%')) return;
 		room.say('/tour start');
 		room.say('/wall Good luck to everyone!');
 	},
-   
-    scrabtour: function (target, room, user) {
-        if (room === user || !user.hasRank(room, '+')) return;
-        room.say('/wall Hosting a scrabgame of Official Scrabble Tour! It will be ran through challonge and the host will post a link after signups are closed! Do /me in to join!')
-    },
 	
 	scrabword: 'scrabwords',
 	scrabwords: function (target, room, user) {
@@ -118,25 +101,10 @@ let commands = {
 			room.say(Tools.sample(Tools.words.sixletter, 2).join(", "));
 		} else {
 			let first = Tools.sample(Tools.words.sixletter, num - 1);
-			room.say(first.join(", ") + " and " + Tools.sample(Tools.words.sixletter));
+			room.say(first.join(", ") + " and " + Tools.sample(Tools.words.sixletter);
 		}
 	},
 	
-	scrabword1v1: 'scrabwords1v1',
-	scrabwords1v1: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
-		let num = parseInt(target);
-		if (!num || num < 1) num = 1;
-		if (num === 1) {
-			room.say(Tools.sample(Tools.words.threeletter));
-		} else if (num === 2) {
-			room.say(Tools.sample(Tools.words.threeletter, 2).join(", "));
-		} else {
-			let first = Tools.sample(Tools.words.threeletter, num - 1);
-			room.say(first.join(", ") + " and " + Tools.sample(Tools.words.threeletter));
-		}
-	},
-
 	answer: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		let aa = ["No", "Dont touch me", "Yes!", "Please try again later", "Probably", "/me does a barrel roll", "Pw-ogg has obliterated your question using a potato chip and a pair of dice. try again later", "can you not", "soon™", "Yes ma'am", "Tis i, the frenchist fry, Tis u, i have no clue.", "/me grinds question into a pulp", "i mean yeah i guess", "chances are that is a no", "can i get a number nine large with extra dip and a side of not going to happen", "no, try a healthy dose of Pw-ogg™ instead!"];
@@ -176,17 +144,17 @@ let commands = {
 	//memes
 	topaz: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Excadrill");
+		Client.send("scrabble|!dt Excadrill");
 	},
-	ard: 'arandom',
+	
 	arandom: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Ducklett");
+		Client.send("scrabble|!dt Ducklett");
 	},
 	
 	spook: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Heatmor");
+		Client.send("scrabble|!dt Heatmor");
 	},
 	
 	snap: function (target, room, user) {
@@ -217,16 +185,6 @@ let commands = {
 	qtie: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Glameow");
-	},
-
-	moo: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Miltank");
-	},
-	
-	swag: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Black Glasses");
 	},
 };
 

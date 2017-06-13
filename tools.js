@@ -22,6 +22,7 @@ class Tools {
 		this.data.learnsets = require('./data/learnsets.js').BattleLearnsets;
 		this.data.badges = require('./data/badges.js').badges;
 		this.data.badgesinverse = require('./data/badgeinverse.js').badgesinverse;
+		this.words = require('./data/words.js').words;
 	}
 
 	toId(text) {
@@ -70,7 +71,7 @@ class Tools {
 			text = text.substr(10);
 			if (!text.includes('**') && text.length <= 296) text = '**' + text + '**';
 		}
-		if (text.length > 300) text = text.substr(0, 297) + "...";
+		if (text.length > 300 && !text.startsWith('/addhtmlbox')) text = text.substr(0, 297) + "...";
 		return text;
 	}
 
