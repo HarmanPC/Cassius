@@ -424,7 +424,7 @@ let commands = {
 			return room.say("You can only remove top points from the Scrabble leaderboard.");
 		}
 		target = split.slice().splice(1).join(",");
-		if (dd.removeThird(target)) {
+		if (dd.removeTop(target)) {
 			room.say("Top points removed from: **" + target + "** on the " + dd.name + " leaderboard.");
 		} else {
 			room.say("**" + target + "** has never placed third on the " + dd.name + " leaderboard.!");
