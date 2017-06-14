@@ -60,7 +60,7 @@ let commands = {
 	
 	pwogg: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("What will Snap break this time?");
+		room.say("Pw-ogg is named Pw-ogg because of a fictional species called Woggs made by global voice __SUNFISHED__, and whilst coming up with different names for said species, came up Poggs, combining the two came Pwogg!");
 	},
 	
 	nt: function (target, room, user) {
