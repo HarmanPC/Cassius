@@ -9,6 +9,16 @@
 
 'use strict';
 
+function getLB(word) {
+	word = Tools.toId(word);
+	if (word === 'scrabble') {
+		return scrabblelb;
+	} else if (word === 'scrabmons' || word === 'scrabmon' || word === 'scrabblemons') {
+		return scrabmonlb;
+	} else {
+		return false;
+	}
+}
 let commands = {
 	// Developer commands
 	js: 'eval',
@@ -228,6 +238,278 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Black Glasses");
 	},
+	
+	//leaderboard commands 
+	firsts: 'first',
+	first: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are adding to");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		target = split.slice().splice(1).join(",");
+		dd.addFirst(target);
+		room.say("First place points awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");
+	},
+	seconds: 'second',
+	second: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are adding to");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		target = split.slice().splice(1).join(",");
+		dd.addSecond(target);
+		room.say("Second place points awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");	
+	},
+	third: 'thirds',
+	thirds: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are adding to");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		if (dd.name !== "Scrabble") {
+			return room.say("You can only add third place to the Scrabble leaderboard.");
+		}
+		target = split.slice().splice(1).join(",");
+		dd.addThird(target);
+		room.say("Third place awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");
+	},
+	highscores: 'toppoints',
+	highscore: 'toppoints',
+	toppoint: 'toppoints',
+	toppoints: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		if (dd.name !== "Scrabble") {
+			return room.say("You can only add toppoints to the Scrabble leaderboard.");
+		}
+		target = split.slice().splice(1).join(",");
+		dd.addTop(target);
+		room.say("High Scores awarded to **" + target.trim() + "** on the Scrabble leaderboard.");
+	},
+
+	part: 'participation',
+	parts: 'participation',
+	participation: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are adding to");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		split = split.splice(1);
+		for (let i = 0; i < split.length; i++) {
+			split[i] = split[i].trim();
+		}
+		for (let i = 0; i < split.length; i++) {
+			dd.addPart(split[i]);
+		}
+		let msg = "Participation points awarded to: **" + split.join(", ") + "**.";
+		if (msg.length > 300) {
+			let len = split.length;
+			let firstHalf = split.slice(0, Math.floor(len / 2.0));
+			let secondHalf = split.slice(Math.floor(len / 2.0));
+			room.say("Participations points awarded to: **" + firstHalf.join(", ") + "**.");
+			room.say("and **" + secondHalf.join(", ") + "**.");
+		} else {
+			room.say(msg);
+		}
+	},
+
+	rmfirst: 'removefirst',
+	removefirst: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are removing from");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		target = split.slice().splice(1).join(",");
+		if (dd.removeFirst(target)) {
+			room.say("First place removed from: **" + target + "** on the " + dd.name + " leaderboard.");
+		} else {
+			room.say("**" + target + "** has never won a game on the " + dd.name + " leaderboard.!");
+		}
+	},
+	
+	rmsecond: 'removesecond',
+	removesecond: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are removing from");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		target = split.slice().splice(1).join(",");
+		if (dd.removeSecond(target)) {
+			room.say("Second place removed from: **" + target + "** on the " + dd.name + " leaderboard.");
+		} else {
+			room.say("**" + target + "** has never placed second on the " + dd.name + " leaderboard.!");
+		}
+	},
+
+	rmthird: 'removethird',
+	removethird: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are removing from");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		if (dd.name !== "Scrabble") {
+			return room.say("You can only remove third places from the Scrabble leaderboard.");
+		}
+		target = split.slice().splice(1).join(",");
+		if (dd.removeThird(target)) {
+			room.say("Third place removed from: **" + target + "** on the " + dd.name + " leaderboard.");
+		} else {
+			room.say("**" + target + "** has never placed third on the " + dd.name + " leaderboard.!");
+		}
+	},
+
+	rmtop: 'removetop',
+	removetop: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are removing from");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		if (dd.name !== "Scrabble") {
+			return room.say("You can only remove top points from the Scrabble leaderboard.");
+		}
+		target = split.slice().splice(1).join(",");
+		if (dd.removeThird(target)) {
+			room.say("Top points removed from: **" + target + "** on the " + dd.name + " leaderboard.");
+		} else {
+			room.say("**" + target + "** has never placed third on the " + dd.name + " leaderboard.!");
+		}
+	},
+	removeparts: 'removepart',
+	removeparticipation: 'removepart',
+	rmpart: 'removepart',
+	rmparts: 'removepart',
+	removepart: function (target, room, user) {
+		if (!target) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
+		let split = target.split(",");
+		if (split.length < 2) {
+			return room.say("You must specify the leaderboard you are removing from");
+		}
+		let dd = getLB(split[0]);
+		if (!dd) {
+			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
+		}
+		split = split.splice(1);
+		let good = [];
+		let bad = [];
+		for (let i = 0; i < split.length; i++) {
+			let name = split[i];
+			if (dd.removePart(name)) {
+				good.push(name);
+			} else {
+				bad.push(name);
+			}
+		}
+		if (good.length > 0 && bad.length > 0) {
+			room.say("Participations removed from: **" + good.join(", ") + "**. I was unable to remove participation from **" + bad.join(", ") + "**.");
+		} else if (good.length > 0) {
+			room.say("Participations removed from: **" + good.join(", ") + "**.");
+		} else {
+			room.say("I was unable to remove participations from **" + bad.join(", ") + "**.");
+		}
+	},
+	
+	top: function (target, room, user) {
+		if (!user.hasRank(room, '+') && room !== user) return;
+		let split = target.split(",");
+		if (split.length < 1) {
+			return user.say("You must specify the lb you are looking at.");
+		}
+		let lb = getLB(split[0]);
+		if (!lb) {
+			return user.say("Invalid leaderboard specified.");
+		}
+		let num = parseInt(split[1]);
+		if (!num) num = 5;
+		let sorted = lb.getSorted();
+		if (num > sorted.length) num = sorted.length;
+		if (room === user) {
+			let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
+			let indices = ["Rank", "Name", "Points"];
+			for (let i = 0; i < 3; i++) {
+				str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
+			}
+			str += "</tr>"
+			let strs = [];
+			for (let i = Math.max(0, num - 5); i < num; i++) {
+				let strx = "<tr>";
+				for (let j = 0; j < 3; j++) {
+					let stuff;
+					if (j === 0) stuff = i + 1;
+					else if (j === 1) stuff = sorted[i][lb.getNameIndex()];
+					else stuff = lb.getPoints(sorted[i]);
+					strx += "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + stuff + "</font></b></td>";
+				}
+				strs.push(strx + "</tr>");
+			}
+			str += strs.join("");
+			str += "</table></body></html></div>";	
+			Rooms.get('scrabble').say('/pminfobox ' + user.id + ", " + str);
+		} else {
+			let str = lb.getStr(num);
+			if (room.id === 'scrabble') {
+				room.say("/addhtmlbox " + str);
+			} else {
+				room.say("!htmlbox " + str);
+			}
+		}
+	}
 };
 
 module.exports = commands;

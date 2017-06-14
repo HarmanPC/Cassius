@@ -36,7 +36,10 @@ global.Client = require('./client.js');
 
 global.Games = require('./games.js');
 Games.loadGames();
-
+global.scrabblelb = require('./ScrabbleLB.js');
+scrabblelb.importData();
+global.scrabmonlb = require('./Scrabmonlb.js');
+scrabmonlb.importData();
 global.Storage = require('./storage.js');
 Storage.importDatabases();
 

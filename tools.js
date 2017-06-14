@@ -71,7 +71,7 @@ class Tools {
 			text = text.substr(10);
 			if (!text.includes('**') && text.length <= 296) text = '**' + text + '**';
 		}
-		if (text.length > 300 && !text.startsWith('/addhtmlbox')) text = text.substr(0, 297) + "...";
+		if (text.length > 300 && !text.startsWith('/addhtmlbox') && !text.startsWith('/pminfobox') && !text.startsWith("!htmlbox")) text = text.substr(0, 297) + "...";
 		return text;
 	}
 
