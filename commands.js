@@ -532,9 +532,18 @@ let commands = {
 		if (i !== scrabmonslb.length) {
 			user.say("**" + scrabmonslb[i][3] + "** is #" + (i + 1) + " on the Scrabblemons leaderboard with " + scrabmonslb[i][0] + " first place finishes, " + scrabmonslb[i][1] + " second place finishes, and " + scrabmonslb[i][2] + " participations.");
 		} else {
-			user.say("**" + targetname + "** does not have any points on the Scrabblemons leaderboard.");
+			user.say("**" + targetName + "** does not have any points on the Scrabblemons leaderboard.");
 		}
 	},
+
+	resetlb: function (target, room, user) {
+		if (room !== user || !user.hasRank(Rooms.get('scrabble'), '#')) return;
+		scrabblelb.lb = {};
+		scrabmonlb.lb = {};
+		scrabblelb.exportData();
+		scrabmonlb.exportData();
+		return user.say("Scrabble and Scrabblemons leaderboards have been reset.");
+	}
 };
 
 module.exports = commands;
