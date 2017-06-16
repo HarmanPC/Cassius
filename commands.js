@@ -149,7 +149,7 @@ let commands = {
 
 	answer: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		let aa = ["No", "Dont touch me", "Yes!", "Please try again later", "Probably", "/me does a barrel roll", "Pw-ogg has obliterated your question using a potato chip and a pair of dice. try again later", "can you not", "soon™", "Yes ma'am", "Tis i, the frenchist fry, Tis u, i have no clue.", "/me grinds question into a pulp", "i mean yeah i guess", "chances are that is a no", "can i get a number nine large with extra dip and a side of not going to happen", "no, try a healthy dose of Pw-ogg™ instead!"];
+		let aa = ["No", "Dont touch me", "Yes!", "Please try again later", "Probably", "/me does a barrel roll", "Pw-ogg has obliterated your question using a potato chip and a pair of dice. try again later", "can you not", "soon™", "Yes ma'am", "/me grinds question into a pulp", "i mean yeah i guess", "chances are that is a no", "no, try a healthy dose of Pw-ogg™ instead!"];
 		room.say(Tools.sample(aa));
 	},
 	
