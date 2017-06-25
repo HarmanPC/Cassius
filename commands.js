@@ -159,6 +159,14 @@ let commands = {
 		room.say(Tools.sample(aa));
 	},
 	
+	check: function (target, room, user) {
+		if (room !== user && !user.hasRank(room, '+')) return;
+		if (scrabwords.indexOf(target.toUpperCase()) !== -1) { this.say("__**" + target + "**__ is a valid word!"); }
+		else {
+			room.say("__**" + target + "**__ is NOT a valid word!");
+		}
+	},
+	
 	//client.send("scrabble|/mn	
 	// Game commands
 	signups: 'creategame',
@@ -263,7 +271,7 @@ let commands = {
 	
 	randtier: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		let waaw = ["Ubers", "OU", "UU", "RU", "NU", "PU", "LC", "NFE", "AG", "Monotype", "MnM", "CAP"]
+		let waaw = ["Ubers", "OU", "UU", "RU", "NU", "AG", "MnM", "CAP"]
 		room.say(Tools.sample(waaw));
 	},
 

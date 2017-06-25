@@ -42,6 +42,7 @@ global.scrabmonlb = require('./Scrabmonlb.js');
 scrabmonlb.importData();
 global.Storage = require('./storage.js');
 Storage.importDatabases();
+global.scrabwords = require('./wordslmao.js').scrabwords
 
 let plugins = fs.readdirSync('./plugins');
 for (let i = 0, len = plugins.length; i < len; i++) {
