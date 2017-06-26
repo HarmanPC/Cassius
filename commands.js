@@ -215,7 +215,7 @@ let commands = {
 	
 	snap: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("!dt Misdreavus");
+		room.say("/me snaps fingers");
 	},
 	
 	dsg: function (target, room, user) {
@@ -256,10 +256,22 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Black Glasses");
 	},
+	
 	ryy: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		room.say("▲ ► ▼ ◄ ▲ ► ▼ ◄ ▼ ◄ ▲");
 		room.say("Sorry, I dropped my bag of doritos");
+	},
+		
+	pq: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		room.say("!dt piplup");
+		room.say("PQ a hoe");
+	},
+	
+	inac: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		room.say("I swear I'm not playing league");
 	},
 	
 	pun: function (target, room, user) {
