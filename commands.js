@@ -270,7 +270,7 @@ let commands = {
 	
 	pwogg: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say("It's not a phase, Spooktune!");
+		room.say("No, I don't love you, stop asking.");
 	},
 	
 	randtier: function (target, room, user) {
