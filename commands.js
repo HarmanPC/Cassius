@@ -222,6 +222,10 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Giratina-Origin");
 	},
+	artist: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		room.say("My name's Van. I'm an artist, I'm a performance artist.");
+	},
 
 	order: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
@@ -266,7 +270,7 @@ let commands = {
 	
 	pwogg: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say("please stop breaking me");
+		room.say("It's not a phase, Spooktune!");
 	},
 	
 	randtier: function (target, room, user) {
