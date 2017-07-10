@@ -215,16 +215,17 @@ let commands = {
 	
 	snap: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("/me snaps fingers");
+		room.say("/me shrugs");
+		room.say("It's something new everyday");
 	},
 	
 	dsg: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Giratina-Origin");
 	},
-	artist: function (target, room, user) {
+	aesthetic: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("My name's Van. I'm an artist, I'm a performance artist.");
+		room.say("Ａｅｓｔｈｅｔｉｃ");
 	},
 
 	order: function (target, room, user) {
