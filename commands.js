@@ -9,6 +9,7 @@
 
 'use strict';
 
+/**@type {{[k: string]: Command | string}} */
 function getLB(word) {
 	word = Tools.toId(word);
 	if (word === 'scrabble') {
@@ -31,11 +32,12 @@ let commands = {
 			this.say(e.name + ": " + e.message);
 		}
 	},
+	//Spyfall commands
 
 	// Informational commands
 	about: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say(Config.username + " code by sirDonovan: https://github.com/sirDonovan/Cassius with additions made by Spooktune~");
+		room.say(Config.username + " code by sirDonovan: https://github.com/sirDonovan/Cassius");
 	},
 
 	beep: function (target, room, user) {
@@ -52,24 +54,33 @@ let commands = {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("/me hugs " + target);
 	},
-
-
+	
 	intro: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
+		if (!user.hasRank(room, '+')) return
+		if (room.id !== 'scrabble') return;
 		room.say("/addhtmlbox <div>Welcome to Scrabble!<li> <a href='http://scrabble-ps.weebly.com'>PS Scrabble Website</a></li> <li><a href='https://en.crosswordsarena.com/'>Play Scrabble!</a></li></ul></div>");
 	},
-
+	
+	intro: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return
+		if (room.id !== 'groupchat-snapeasy-spyfall') return;
+		room.say("**Welcome to Spyfall**! PS Spyfall Website: http://spyfallps.weebly.com/ Room Rules: http://spyfallps.weebly.com/room-rules.html Spyfall Official Games: http://spyfallps.weebly.com/spy-games.html Spyfall Unofficial Games: https://docs.google.com/document/d/1qloo_zEXzDjYFDEyAW0I6-xKAMgBEgCURA0IZot9c2I/edit");
+	},
+	
 	roomdesc: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (!user.hasRank(room, '+')) return;
 		room.say("/addhtmlbox <div>Play Scrabble with friends, join Scrabble tournaments, and compete in the exciting new Scrabblemons metagame!</div>");
 	},
 	
 	nt: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (!user.hasRank(room, '+')) return;
 		room.say("this is why I don't play with timer.");
 	},
 
 	play: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (!user.hasRank(room, '+')) return;	
 		room.say('/addhtmlbox <font style="color: Red;"><b> Welcome to Scrabble! Click to play! </b></font><a href="https://en.crosswordsarena.com/" target="_blank"><button style="background-color: #c90100; border-radius: 5px; border: solid, 1px, white; color: white; font-size: 12px; padding: 3px 5px; font-weight: bold; auto; box-shadow:2px 2px black; transform: skew(-15deg);display:inline-block;margin-top:10px"><span style="font-size:1.25em; text-shadow:2px 2px black">Play!</span></button></a>');
 	},
@@ -95,12 +106,14 @@ let commands = {
 	},
 
 	scrabmonstour: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
         if (room === user || !user.hasRank(room, '+')) return;
         room.say('/tour create gen 7 ' + target + ' , elimination');
         room.say('/tour name Scrabblemons ' + target);
 	},
    
     tourofficial: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
         if (room === user || !user.hasRank(room, '+')) return;
 		room.say('/tour create gen 7 ' + target + ' , elimination');
         room.say('/tour name Scrabblemons ' + target + ' Official');
@@ -108,23 +121,27 @@ let commands = {
     },
    
     tourstart: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (room === user || !user.hasRank(room, '+')) return;
 		room.say('/tour start');
 		room.say('/wall Good luck to everyone!');
 	},
 	
 	tourend: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (room === user || !user.hasRank(room, '+')) return;
 		room.say('/tour end');
 	},
    
     scrabtour: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
         if (room === user || !user.hasRank(room, '+')) return;
         room.say('/wall Hosting a scrabgame of Official Scrabble Tour! It will be ran through challonge and the host will post a link after signups are closed! Do /me in to join!')
     },
 	
 	scrabword: 'scrabwords',
 	scrabwords: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		let num = parseInt(target);
 		if (!num || num < 1) num = 1;
@@ -140,6 +157,7 @@ let commands = {
 	
 	scrabword1v1: 'scrabwords1v1',
 	scrabwords1v1: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		let num = parseInt(target);
 		if (!num || num < 1) num = 1;
@@ -160,6 +178,7 @@ let commands = {
 	},
 	
 	check: function (target, room, user) {
+		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		if (scrabwords.indexOf(target.toUpperCase()) !== -1) { this.say("__**" + target + "**__ is a valid word!"); }
 		else {
@@ -202,14 +221,22 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Excadrill");
 	},
+	pants: 'pg',
+	pg: function (target, room, user) {
+		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
+		room.say("/me puts on pants");
+	},
 	ard: 'arandom',
 	arandom: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Ducklett");
 	},
 	
 	spook: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Heatmor");
 	},
 	
@@ -220,35 +247,42 @@ let commands = {
 	
 	dsg: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Giratina-Origin");
 	},
-	artist: function (target, room, user) {
+	val: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("My name's Van. I'm an artist, I'm a performance artist.");
+		if (room.id !== 'scrabble') return;
+		room.say("ＡＥＳＴＨＥＴＩＣ");
 	},
 
 	order: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Zygarde-10%");
 	},
 	
 	azu: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Celebi");
 	},
 	
 	sty: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Drifblim");
 	},
 	
 	qtie: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Glameow");
 	},
 
 	moo: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt Miltank");
 	},
 	
@@ -259,18 +293,21 @@ let commands = {
 	
 	ryy: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("▲ ► ▼ ◄ ▲ ► ▼ ◄ ▼ ◄ ▲");
 		room.say("Sorry, I dropped my bag of doritos");
 	},
 		
 	pq: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("!dt piplup");
 		room.say("PQ a hoe");
 	},
 	
 	inac: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
+		if (room.id !== 'scrabble') return;
 		room.say("I swear I'm not playing league");
 	},
 	

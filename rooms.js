@@ -9,24 +9,45 @@
 
 'use strict';
 
+const Game = require('./games').Game; // eslint-disable-line no-unused-vars
+const User = require('./users').User; // eslint-disable-line no-unused-vars
+
 class Room {
+	/**
+	 * @param {string} id
+	 */
 	constructor(id) {
 		this.id = id;
 		this.clientId = id === 'lobby' ? '' : id;
+		/**@type {Map<User, string>} */
 		this.users = new Map();
+		/**@type {{[k: string]: Function}} */
 		this.listeners = {};
+		/**@type {?Game} */
+		this.game = null;
 	}
 
+	/**
+	 * @param {User} user
+	 * @param {string} rank
+	 */
 	onJoin(user, rank) {
 		this.users.set(user, rank);
 		user.rooms.set(this, rank);
 	}
 
+	/**
+	 * @param {User} user
+	 */
 	onLeave(user) {
 		this.users.delete(user);
 		user.rooms.delete(this);
 	}
 
+	/**
+	 * @param {User} user
+	 * @param {string} newName
+	 */
 	onRename(user, newName) {
 		let rank = newName.charAt(0);
 		newName = Tools.toName(newName);
@@ -50,82 +71,49 @@ class Room {
 		if (this.game) this.game.renamePlayer(user, oldName);
 	}
 
+	/**
+	 * @param {string} message
+	 */
 	say(message) {
 		message = Tools.normalizeMessage(message, this);
 		if (!message) return;
 		Client.send(this.clientId + '|' + message);
 	}
 
+	/**
+	 * @param {string} message
+	 * @param {Function} listener
+	 */
 	on(message, listener) {
 		message = Tools.normalizeMessage(message, this);
 		if (!message) return;
 		this.listeners[Tools.toId(message)] = listener;
 	}
-
-	parseMessage(messageType, splitMessage) {
-		let user, rank;
-		switch (messageType) {
-		case 'J':
-		case 'j':
-			user = Users.add(splitMessage[0]);
-			if (!user) return;
-			this.onJoin(user, splitMessage[0].charAt(0));
-			break;
-		case 'L':
-		case 'l':
-			user = Users.add(splitMessage[0]);
-			if (!user) return;
-			this.onLeave(user);
-			break;
-		case 'N':
-		case 'n':
-			user = Users.add(splitMessage[1]);
-			if (!user) return;
-			this.onRename(user, splitMessage[0]);
-			break;
-		case 'c': {
-			user = Users.get(splitMessage[0]);
-			if (!user) return;
-			rank = splitMessage[0].charAt(0);
-			if (user.rooms.get(this) !== rank) user.rooms.set(this, rank);
-			let message = splitMessage.slice(1).join('|');
-			if (user.id === Users.self.id) {
-				message = Tools.toId(message);
-				if (message in this.listeners) this.listeners[message]();
-				return;
-			}
-			CommandParser.parse(message, this, user);
-			break;
-		}
-		case 'c:': {
-			user = Users.get(splitMessage[1]);
-			if (!user) return;
-			rank = splitMessage[1].charAt(0);
-			if (user.rooms.get(this) !== rank) user.rooms.set(this, rank);
-			let message = splitMessage.slice(2).join('|');
-			if (user.id === Users.self.id) {
-				message = Tools.toId(message);
-				if (message in this.listeners) this.listeners[message]();
-				return;
-			}
-			CommandParser.parse(message, this, user, splitMessage[0] * 1000);
-			break;
-		}
-
-		}
-	}
 }
+
+exports.Room = Room;
 
 class Rooms {
 	constructor() {
 		this.rooms = {};
+
+		this.Room = Room;
+		this.globalRoom = this.add('global');
 	}
 
+	/**
+	 * @param {Room | string} id
+	 * @return {Room}
+	 */
 	get(id) {
-		if (id && id.users) return id;
+		if (id instanceof Room) return id;
 		return this.rooms[id];
 	}
 
+	/**
+	 * @param {string} id
+	 * @return {Room}
+	 */
 	add(id) {
 		let room = this.get(id);
 		if (!room) {
@@ -135,8 +123,11 @@ class Rooms {
 		return room;
 	}
 
-	destroy(room) {
-		room = this.get(room);
+	/**
+	 * @param {Room | string} id
+	 */
+	destroy(id) {
+		let room = this.get(id);
 		if (!room) return;
 		room.users.forEach(function (value, user) {
 			user.rooms.delete(room);
@@ -145,4 +136,4 @@ class Rooms {
 	}
 }
 
-module.exports = new Rooms();
+exports.Rooms = new Rooms();

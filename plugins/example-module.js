@@ -12,10 +12,19 @@
 
 'use strict';
 
-class PluginManager {
+/**@type {{[k: string]: Command | string}} */
+let commands = {
+	about: function (target, room, user) {
+		if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return;
+		this.say("test");
+	},
+};
+
+class Plugin {
 	constructor() {
 		this.name = "Example";
 		this.data = {};
+		this.commands = commands;
 	}
 
 	onLoad() {
@@ -25,17 +34,6 @@ class PluginManager {
 	loadData() {
 		// initialization that requires the plugin to be in the global namespace
 	}
-
 }
 
-let Plugin = new PluginManager();
-
-let commands = {
-	about: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
-		this.say(Config.username + " code by sirDonovan: https://github.com/sirDonovan/Cassius");
-	},
-};
-Plugin.commands = commands;
-
-module.exports = Plugin;
+module.exports = new Plugin();

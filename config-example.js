@@ -19,9 +19,11 @@ exports.server = '';
 
 // Rooms that Cassius will attempt to join after logging in
 // example: exports.rooms = ['room1', 'room2', 'room3'];
+/**@type {Array<string>} */
 exports.rooms = [];
 
 // Rooms where scripted games are enabled
+/**@type {Array<string>} */
 exports.games = [];
 
 // The character that determines which messages are read as commands
@@ -43,4 +45,37 @@ exports.groups = {
 
 // Userids of those who have debug access to Cassius
 // example: exports.developers = ['devuser1', 'devuser2', 'devuser3'];
+/**@type {Array<string>} */
 exports.developers = [];
+
+// Custom functions
+/**@type {?Function} */
+exports.parseMessage = null;
+/**@type {?Function} */
+exports.moderate = null;
+
+/**@type {boolean | {[k: string]: boolean}} */
+exports.allowModeration = false;
+
+let punishmentPoints = {
+	'verbalwarn': 0,
+	'warn': 1,
+	'mute': 2,
+	'hourmute': 3,
+	'roomban': 4,
+};
+
+let punishmentActions = {};
+for (let i in punishmentPoints) {
+	punishmentActions['' + punishmentPoints[i]] = i;
+}
+
+exports.punishmentPoints = punishmentPoints;
+exports.punishmentActions = punishmentActions;
+
+// Reasons used when Cassius punishes a user for
+// flooding, stretching, caps, etc.
+// example: punishmentReasons = {'flooding': 'please do not flood the chat'}
+
+/**@type {?{[k: string]: string}} */
+exports.punishmentReasons = null;
