@@ -9,7 +9,7 @@
 
 'use strict';
 
-
+/**@type {{[k: string]: Command | string}} */
 function getLB(word) {
 	word = Tools.toId(word);
 	if (word === 'scrabble') {
@@ -242,18 +242,17 @@ let commands = {
 	
 	snap: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		room.say("/me snaps fingers");
+		room.say("/me shrugs");
+		room.say("It's something new everyday");
 	},
 	
 	dsg: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		if (room.id !== 'scrabble') return;
 		room.say("!dt Giratina-Origin");
 	},
-	val: function (target, room, user) {
+	aesthetic: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
-		if (room.id !== 'scrabble') return;
-		room.say("ＡＥＳＴＨＥＴＩＣ");
+		room.say("Ａｅｓｔｈｅｔｉｃ");
 	},
 
 	order: function (target, room, user) {

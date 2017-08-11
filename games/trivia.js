@@ -1,17 +1,17 @@
 /**
- * Example game
+ * Trivia game
  * Cassius - https://github.com/sirDonovan/Cassius
- *
- * This file contains example code for a game (Trivia)
  *
  * @license MIT license
  */
 
 'use strict';
 
+const Room = require('./../rooms').Room; // eslint-disable-line no-unused-vars
+const User = require('./../users').User; // eslint-disable-line no-unused-vars
+
 const name = "Trivia";
-const id = Tools.toId(name);
-const description = "Guess answers based on the given descriptions.";
+
 const data = {
 	"Pokemon Moves": {},
 	"Pokemon Items": {},
@@ -51,20 +51,24 @@ for (let i in Tools.data.badges) {
 	data["Pokemon Badges"]["This is the badge of " + i + "."] = badges;
 }
 
-
+// if inheriting from or inherited by another game, this class would be declared as:
+// let Trivia = base => class extends base {
 class Trivia extends Games.Game {
+	/**
+	 * @param {Room} room
+	 */
 	constructor(room) {
 		super(room);
-		this.name = name;
-		this.id = id;
-		this.description = description;
 		this.freeJoin = true;
-		this.answers = null;
-		this.hint = null;
+		/**@type {Array<string>} */
+		this.answers = [];
+		/**@type {?NodeJS.Timer} */
+		this.timeout = null;
+		this.hint = '';
 		this.points = new Map();
 		this.maxPoints = 3;
 		this.categories = Object.keys(data);
-		this.questions = [];
+		this.questions = {};
 		for (let i = 0, len = this.categories.length; i < len; i++) {
 			this.questions[this.categories[i]] = Object.keys(data[this.categories[i]]);
 		}
@@ -87,9 +91,8 @@ class Trivia extends Games.Game {
 	}
 
 	onNextRound() {
-		if (this.answers) {
-			let answers = this.answers.length;
-			this.say("Time's up! The answer" + (answers > 1 ? "s were" : " was") + " __" + this.answers.join(", ") + "__");
+		if (this.answers.length) {
+			this.say("Time's up! The answer" + (this.answers.length > 1 ? "s were" : " was") + " __" + this.answers.join(", ") + "__");
 		}
 		this.setAnswers();
 		this.on(this.hint, () => {
@@ -97,39 +100,11 @@ class Trivia extends Games.Game {
 		});
 		this.say(this.hint);
 	}
-
-	checkAnswer(guess) {
-		guess = Tools.toId(guess);
-		for (let i = 0, len = this.answers.length; i < len; i++) {
-			if (Tools.toId(this.answers[i]) === guess) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	guess(guess, user) {
-		if (!this.answers || !this.checkAnswer(guess)) return;
-		clearTimeout(this.timeout);
-		if (!(user.id in this.players)) this.addPlayer(user);
-		let player = this.players[user.id];
-		let points = this.points.get(player) || 0;
-		points += 1;
-		this.points.set(player, points);
-		if (points >= this.maxPoints) {
-			this.say("Correct! " + user.name + " wins the game! (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
-			this.end();
-			return;
-		}
-		this.say("Correct! " + user.name + " advances to " + points + " point" + (points > 1 ? "s" : "") + ". (Answer" + (this.answers.length > 1 ? "s" : "") + ": __" + this.answers.join(", ") + "__)");
-		this.answers = null;
-		this.timeout = setTimeout(() => this.nextRound(), 5 * 1000);
-	}
 }
 
 exports.name = name;
-exports.id = id;
-exports.description = description;
+exports.id = Tools.toId(name);
+exports.description = "Players guess answers based on the given descriptions!";
 exports.commands = {
 	// command: game function
 	// alias: command
@@ -140,25 +115,54 @@ exports.aliases = ['triv'];
 exports.variations = [
 	{
 		name: "Move Trivia",
+		aliases: ['Moves Trivia'],
 		variation: "Pokemon Moves",
-		aliases: ['moves'],
-	},
-	{
-		name: "Badge Trivia",
-		variation: "Pokemon Badges",
-		aliases: ['badges'],
+		variationAliases: ['moves'],
 	},
 	{
 		name: "Item Trivia",
+		aliases: ['Items Trivia'],
 		variation: "Pokemon Items",
-		aliases: ['items'],
+		variationAliases: ['items'],
 	},
 	{
 		name: "Ability Trivia",
+		aliases: ['Abilities Trivia'],
 		variation: "Pokemon Abilities",
-		aliases: ['abilities'],
+		variationAliases: ['abilities'],
 	},
-
+	{
+		name: "Badge Trivia",
+		aliases: ['Badges Trivia'],
+		variation: "Pokemon Badges",
+		variationAliases: ['badges'],
+	},
 ];
-exports.modes = ["Survival"];
+exports.modes = ["Survival", "Team"];
+// if inheriting from or inherited by another game, this game would be exported as:
+// exports.install = Trivia;
 exports.game = Trivia;
+
+/**
+ * @param {Trivia} game
+ */
+exports.spawnMochaTests = function (game) {
+	// you can skip tests for variations or modes by checking "game.variationId" or "game.modeId" here
+	if (game.modeId) return;
+
+	const assert = require('assert');
+
+	let tests = {
+		/**
+		 * @param {Trivia} game
+		 */
+		'guess': game => {
+			game.signups();
+			game.nextRound();
+			MessageParser.parseCommand(Config.commandCharacter + 'guess ' + game.answers[0], game.room, Users.add("User 1"));
+			assert(game.points.get(game.players['user1']) === 1);
+		},
+	};
+
+	return tests;
+};
