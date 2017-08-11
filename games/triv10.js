@@ -9,7 +9,7 @@
 
 'use strict';
 
-const name = "Trivia";
+const name = "Trivia 10";
 const id = Tools.toId(name);
 const description = "Guess answers based on the given descriptions.";
 const data = {
@@ -62,7 +62,7 @@ class Trivia extends Games.Game {
 		this.answers = null;
 		this.hint = null;
 		this.points = new Map();
-		this.maxPoints = 3;
+		this.maxPoints = 10;
 		this.categories = Object.keys(data);
 		this.questions = [];
 		for (let i = 0, len = this.categories.length; i < len; i++) {
@@ -136,7 +136,7 @@ exports.commands = {
 	"guess": "guess",
 	"g": "guess",
 };
-exports.aliases = ['triv'];
+exports.aliases = ['triv10'];
 exports.variations = [
 	{
 		name: "Move Trivia",

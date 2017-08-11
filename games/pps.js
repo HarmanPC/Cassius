@@ -9,50 +9,24 @@
 
 'use strict';
 
-const name = "Trivia";
+const name = "Pupitar's Power Switch";
 const id = Tools.toId(name);
-const description = "Guess answers based on the given descriptions.";
+const description = "Guess a move that has a Base Power that's within the tens range of Pupitar's power! Use ``-g`` to answer, more info can be found here: http://s15.zetaboards.com/PS_Game_Corner/topic/10037025/1/";
 const data = {
 	"Pokemon Moves": {},
-	"Pokemon Items": {},
-	"Pokemon Abilities": {},
-	"Pokemon Badges": {},
+	"Pupitar's power is 190!": [],
 };
+
 
 for (let i in Tools.data.moves) {
 	let move = Tools.data.moves[i];
-	if (!move.name) continue;
-	let desc = move.desc || move.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Moves"])) data["Pokemon Moves"][desc] = [];
-	data["Pokemon Moves"][desc].push(move.name);
+	if (!move.name || !move.basePower || move.basePower < 10) continue;
+	let roundedBP = Math.floor(move.basePower / 10) * 10;
+	if (!(roundedBP in data)) data[roundedBP] = [];
+	data[roundedBP].push(move.name);
 }
 
-for (let i in Tools.data.items) {
-	let item = Tools.data.items[i];
-	if (!item.name) continue;
-	let desc = item.desc || item.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Items"])) data["Pokemon Items"][desc] = [];
-	data["Pokemon Items"][desc].push(item.name);
-}
-
-for (let i in Tools.data.abilities) {
-	let ability = Tools.data.abilities[i];
-	if (!ability.name) continue;
-	let desc = ability.desc || ability.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Abilities"])) data["Pokemon Abilities"][desc] = [];
-	data["Pokemon Abilities"][desc].push(ability.name);
-}
-
-for (let i in Tools.data.badges) {
-	let badges = Tools.data.badges[i];
-	data["Pokemon Badges"]["This is the badge of " + i + "."] = badges;
-}
-
-
-class Trivia extends Games.Game {
+class Pupitars extends Games.Game {
 	constructor(room) {
 		super(room);
 		this.name = name;
@@ -65,9 +39,6 @@ class Trivia extends Games.Game {
 		this.maxPoints = 3;
 		this.categories = Object.keys(data);
 		this.questions = [];
-		for (let i = 0, len = this.categories.length; i < len; i++) {
-			this.questions[this.categories[i]] = Object.keys(data[this.categories[i]]);
-		}
 	}
 
 	onSignups() {
@@ -75,15 +46,9 @@ class Trivia extends Games.Game {
 	}
 
 	setAnswers() {
-		let category;
-		if (this.variation) {
-			category = this.variation;
-		} else {
-			category = Tools.sample(this.categories);
-		}
-		let question = Tools.sample(this.questions[category]);
-		this.answers = data[category][question];
-		this.hint = "**" + category + "**: " + question;
+		let power = Tools.sample(Object.keys(data));
+		this.answers = data[power];
+		this.hint = "The chosen base power is **" + ((typeof power === 'string' ? Math.floor(power) : power) + Math.floor(Math.random() * 10)) + "**!";
 	}
 
 	onNextRound() {
@@ -136,29 +101,6 @@ exports.commands = {
 	"guess": "guess",
 	"g": "guess",
 };
-exports.aliases = ['triv'];
-exports.variations = [
-	{
-		name: "Move Trivia",
-		variation: "Pokemon Moves",
-		aliases: ['moves'],
-	},
-	{
-		name: "Badge Trivia",
-		variation: "Pokemon Badges",
-		aliases: ['badges'],
-	},
-	{
-		name: "Item Trivia",
-		variation: "Pokemon Items",
-		aliases: ['items'],
-	},
-	{
-		name: "Ability Trivia",
-		variation: "Pokemon Abilities",
-		aliases: ['abilities'],
-	},
-
-];
+exports.aliases = ['pps'];
 exports.modes = ["Survival"];
-exports.game = Trivia;
+exports.game = Pupitars;

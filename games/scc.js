@@ -9,50 +9,23 @@
 
 'use strict';
 
-const name = "Trivia";
+const name = "Skitty's Contest Course";
 const id = Tools.toId(name);
 const description = "Guess answers based on the given descriptions.";
-const data = {
-	"Pokemon Moves": {},
-	"Pokemon Items": {},
-	"Pokemon Abilities": {},
-	"Pokemon Badges": {},
-};
+const data = {};
 
 for (let i in Tools.data.moves) {
 	let move = Tools.data.moves[i];
 	if (!move.name) continue;
-	let desc = move.desc || move.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Moves"])) data["Pokemon Moves"][desc] = [];
-	data["Pokemon Moves"][desc].push(move.name);
-}
-
-for (let i in Tools.data.items) {
-	let item = Tools.data.items[i];
-	if (!item.name) continue;
-	let desc = item.desc || item.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Items"])) data["Pokemon Items"][desc] = [];
-	data["Pokemon Items"][desc].push(item.name);
-}
-
-for (let i in Tools.data.abilities) {
-	let ability = Tools.data.abilities[i];
-	if (!ability.name) continue;
-	let desc = ability.desc || ability.shortDesc;
-	if (!desc) continue;
-	if (!(desc in data["Pokemon Abilities"])) data["Pokemon Abilities"][desc] = [];
-	data["Pokemon Abilities"][desc].push(ability.name);
-}
-
-for (let i in Tools.data.badges) {
-	let badges = Tools.data.badges[i];
-	data["Pokemon Badges"]["This is the badge of " + i + "."] = badges;
+	let contest = move.contestType;
+	if (!contest) continue;
+        let str = "Name a move that is **" + contest + "** and **" + move.type + " type**!";
+	if (!(str in data)) data[str] = [];
+	data[str].push(move.name);
 }
 
 
-class Trivia extends Games.Game {
+class skittys extends Games.Game {
 	constructor(room) {
 		super(room);
 		this.name = name;
@@ -64,10 +37,6 @@ class Trivia extends Games.Game {
 		this.points = new Map();
 		this.maxPoints = 3;
 		this.categories = Object.keys(data);
-		this.questions = [];
-		for (let i = 0, len = this.categories.length; i < len; i++) {
-			this.questions[this.categories[i]] = Object.keys(data[this.categories[i]]);
-		}
 	}
 
 	onSignups() {
@@ -75,15 +44,9 @@ class Trivia extends Games.Game {
 	}
 
 	setAnswers() {
-		let category;
-		if (this.variation) {
-			category = this.variation;
-		} else {
-			category = Tools.sample(this.categories);
-		}
-		let question = Tools.sample(this.questions[category]);
-		this.answers = data[category][question];
-		this.hint = "**" + category + "**: " + question;
+		let question = Tools.sample(Object.keys(data));
+		this.answers = data[question];
+        this.hint = question;
 	}
 
 	onNextRound() {
@@ -136,29 +99,8 @@ exports.commands = {
 	"guess": "guess",
 	"g": "guess",
 };
-exports.aliases = ['triv'];
+exports.aliases = ['oh'];
 exports.variations = [
-	{
-		name: "Move Trivia",
-		variation: "Pokemon Moves",
-		aliases: ['moves'],
-	},
-	{
-		name: "Badge Trivia",
-		variation: "Pokemon Badges",
-		aliases: ['badges'],
-	},
-	{
-		name: "Item Trivia",
-		variation: "Pokemon Items",
-		aliases: ['items'],
-	},
-	{
-		name: "Ability Trivia",
-		variation: "Pokemon Abilities",
-		aliases: ['abilities'],
-	},
-
 ];
 exports.modes = ["Survival"];
-exports.game = Trivia;
+exports.game = skittys;

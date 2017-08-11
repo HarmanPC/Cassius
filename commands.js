@@ -9,7 +9,7 @@
 
 'use strict';
 
-/**@type {{[k: string]: Command | string}} */
+
 function getLB(word) {
 	word = Tools.toId(word);
 	if (word === 'scrabble') {

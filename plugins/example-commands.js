@@ -12,10 +12,9 @@
 
 'use strict';
 
-/**@type {{[k: string]: Command | string}} */
 let commands = {
 	about: function (target, room, user) {
-		if (!(room instanceof Users.User) && !user.hasRank(room, '+')) return;
+		if (room !== user && !user.hasRank(room, '+')) return;
 		this.say(Config.username + " code by sirDonovan: https://github.com/sirDonovan/Cassius");
 	},
 };

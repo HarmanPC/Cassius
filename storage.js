@@ -10,18 +10,13 @@
 'use strict';
 
 const fs = require('fs');
-const User = require('./users').User; // eslint-disable-line no-unused-vars
 const BACKUP_INTERVAL = 60 * 60 * 1000;
 
-class Storage {
+class StorageManager {
 	constructor() {
 		this.databases = {};
-		this.backupInterval = setInterval(() => this.exportDatabases(), BACKUP_INTERVAL);
 	}
 
-	/**
-	 * @param {string} roomid
-	 */
 	importDatabase(roomid) {
 		let file = '{}';
 		try {
@@ -30,9 +25,6 @@ class Storage {
 		this.databases[roomid] = JSON.parse(file);
 	}
 
-	/**
-	 * @param {string} roomid
-	 */
 	exportDatabase(roomid) {
 		if (!(roomid in this.databases)) return;
 		fs.writeFileSync('./databases/' + roomid + '.json', JSON.stringify(this.databases[roomid]));
@@ -53,12 +45,8 @@ class Storage {
 		}
 	}
 
-	/**
-	 * @param {number} points
-	 * @param {User} user
-	 * @param {string} roomid
-	 */
 	addPoints(points, user, roomid) {
+		points = parseInt(points);
 		if (isNaN(points)) return;
 		if (!(roomid in this.databases)) this.databases[roomid] = {};
 		let database = this.databases[roomid];
@@ -68,19 +56,10 @@ class Storage {
 		if (database.leaderboard[user.id].name !== user.name) database.leaderboard[user.id].name = user.name;
 	}
 
-	/**
-	 * @param {number} points
-	 * @param {User} user
-	 * @param {string} roomid
-	 */
 	removePoints(points, user, roomid) {
 		this.addPoints(-points, user, roomid);
 	}
 
-	/**
-	 * @param {User} user
-	 * @param {string} roomid
-	 */
 	getPoints(user, roomid) {
 		if (!(roomid in this.databases)) this.databases[roomid] = {};
 		let database = this.databases[roomid];
@@ -90,4 +69,7 @@ class Storage {
 	}
 }
 
-module.exports = new Storage();
+let Storage = new StorageManager();
+Storage.backupInterval = setInterval(() => Storage.exportDatabases(), BACKUP_INTERVAL);
+
+module.exports = Storage;

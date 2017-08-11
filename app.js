@@ -26,37 +26,32 @@ if (!Config.username) throw new Error("Please specify a username in config.js");
 
 global.Commands = require('./commands.js');
 
-global.Rooms = require('./rooms.js').Rooms;
+global.CommandParser = require('./command-parser.js');
 
-global.Users = require('./users.js').Users;
+global.Rooms = require('./rooms.js');
 
-global.MessageParser = require('./message-parser.js').MessageParser;
+global.Users = require('./users.js');
 
 global.Client = require('./client.js');
 
-global.Games = require('./games.js').Games;
+global.Games = require('./games.js');
 Games.loadGames();
-
 global.scrabblelb = require('./ScrabbleLB.js');
 scrabblelb.importData();
-
 global.scrabmonlb = require('./Scrabmonlb.js');
 scrabmonlb.importData();
-
-global.scrabwords = require('./wordslmao.js').scrabwords
-
 global.Storage = require('./storage.js');
 Storage.importDatabases();
+global.scrabwords = require('./wordslmao.js').scrabwords
 
 let plugins = fs.readdirSync('./plugins');
 for (let i = 0, len = plugins.length; i < len; i++) {
-	let fileName = plugins[i];
-	if (!fileName.endsWith('.js') || fileName === 'example-commands.js' || fileName === 'example-module.js') continue;
-	let file = require('./plugins/' + fileName);
+	let file = plugins[i];
+	if (!file.endsWith('.js') || file === 'example-commands.js' || file === 'example-module.js') continue;
+	file = require('./plugins/' + file);
 	if (file.name) {
-		// @ts-ignore
 		global[file.name] = file;
-		if (typeof file.onLoad === 'function') file.onLoad();
+		if (typeof global[file.name].onLoad === 'function') global[file.name].onLoad();
 	}
 	if (file.commands) Object.assign(Commands, file.commands);
 }
