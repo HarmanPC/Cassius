@@ -146,12 +146,12 @@ let commands = {
 		let num = parseInt(target);
 		if (!num || num < 1) num = 1;
 		if (num === 1) {
-			room.say(Tools.sample(Tools.words.sixletter));
+			room.say(Tools.sample(Tools.data.words.sixletter));
 		} else if (num === 2) {
-			room.say(Tools.sample(Tools.words.sixletter, 2).join(", "));
+			room.say(Tools.sample(Tools.data.words.sixletter, 2).join(", "));
 		} else {
-			let first = Tools.sample(Tools.words.sixletter, num - 1);
-			room.say(first.join(", ") + " and " + Tools.sample(Tools.words.sixletter));
+			let first = Tools.sample(Tools.data.words.sixletter, num - 1);
+			room.say(first.join(", ") + " and " + Tools.sample(Tools.data.words.sixletter));
 		}
 	},
 	

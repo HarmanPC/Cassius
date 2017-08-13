@@ -17,7 +17,7 @@ const fileData = {
 	'learnsets': {path: './data/learnsets.js', export: 'BattleLearnsets'},
 	'teams': {path: './data/teams.js', export: 'BattlePokeTeams'},
 	'badges': {path: './data/badges.js', export: 'Badges'},
-	'words': {path: './data/words.js', export: 'Words'},
+	'words': {path: './data/words.js', export: 'words'},
 
 };
 
