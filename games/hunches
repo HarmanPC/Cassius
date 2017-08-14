@@ -57,7 +57,7 @@ class Hunches extends Games.Game {
 		this.timeout = null;
 		this.hint = '';
 		this.points = new Map();
-		this.maxPoints = 3;
+		this.maxPoints = 5;
 		this.categories = Object.keys(data);
 		this.currentCategory = '';
 		this.guessLimit = 10;
@@ -89,9 +89,9 @@ class Hunches extends Games.Game {
 		this.letters = letters;
 		let id = Tools.toId(word).split("");
 		this.uniqueLetters = id.filter((letter, index) => id.indexOf(letter) === index).length;
-		this.hint = this.letters.slice();
-		for (let i = 0, len = this.hint.length; i < len; i++) {
-			this.hint[i] = this.hint[i] === ' ' ? "/" : Tools.toId(this.hint[i]).length ? "" : this.hint[i];
+		this.hint = [];
+		for (let i = 0, len = Tools.toId(word).length; i < len; i++) {
+			this.hint.push("");
 		}
 	}
 
@@ -113,9 +113,9 @@ class Hunches extends Games.Game {
 			return;
 		}
 		for (let i = 0, len = this.letters.length; i < len; i++) {
-			if (this.solvedLetters.includes(Tools.toId(this.letters[i]))) this.hint[i] = this.letters[i];
+			if (this.solvedLetters.includes(Tools.toId(this.letters[i]))) this.hint[i] = Tools.toId(this.letters[i]);
 		}
-		this.say(this.hint.join(" ") + " | **" + this.currentCategory + "** | " + this.guessedLetters.join(", "));
+		this.say("**[" + this.currentCategory + "]** " + this.hint.join("") + " | " + this.guessedLetters.join(", "));
 	}
 
 	/**

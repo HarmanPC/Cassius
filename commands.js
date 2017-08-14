@@ -141,7 +141,6 @@ let commands = {
 	
 	scrabword: 'scrabwords',
 	scrabwords: function (target, room, user) {
-		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		let num = parseInt(target);
 		if (!num || num < 1) num = 1;
@@ -157,17 +156,16 @@ let commands = {
 	
 	scrabword1v1: 'scrabwords1v1',
 	scrabwords1v1: function (target, room, user) {
-		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		let num = parseInt(target);
 		if (!num || num < 1) num = 1;
 		if (num === 1) {
-			room.say(Tools.sample(Tools.words.threeletter));
+			room.say(Tools.sample(Tools.data.words.threeletter));
 		} else if (num === 2) {
-			room.say(Tools.sample(Tools.words.threeletter, 2).join(", "));
+			room.say(Tools.sample(Tools.data.words.threeletter, 2).join(", "));
 		} else {
-			let first = Tools.sample(Tools.words.threeletter, num - 1);
-			room.say(first.join(", ") + " and " + Tools.sample(Tools.words.threeletter));
+			let first = Tools.sample(Tools.data.words.threeletter, num - 1);
+			room.say(first.join(", ") + " and " + Tools.sample(Tools.data.words.threeletter));
 		}
 	},
 
@@ -178,7 +176,6 @@ let commands = {
 	},
 	
 	check: function (target, room, user) {
-		if (room.id !== 'scrabble') return;
 		if (room !== user && !user.hasRank(room, '+')) return;
 		if (scrabwords.indexOf(target.toUpperCase()) !== -1) { this.say("__**" + target + "**__ is a valid word!"); }
 		else {
