@@ -18,7 +18,8 @@ const fileData = {
 	'teams': {path: './data/teams.js', export: 'BattlePokeTeams'},
 	'badges': {path: './data/badges.js', export: 'Badges'},
 	'words': {path: './data/words.js', export: 'words'},
-
+	'spookdex': {path: './data/spookdex.js', export: 'spookdex'},
+	'sprites': {path: './data/dexsprites.js', export: 'sprites'},
 };
 
 class Tools {

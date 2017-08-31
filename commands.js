@@ -32,7 +32,19 @@ let commands = {
 			this.say(e.name + ": " + e.message);
 		}
 	},
-	//Spyfall commands
+	//SpookDex commands
+	gettype: function (target, room, user) {
+		if (room !== user && !user.hasRank(room, '+')) return;
+		room.say(Tools.data.pokedex.target.color);
+	},
+	
+	sdsprite: 'dexsprite',
+	dexprite: function (target, room, user) {
+		if (room !== user && !user.hasRank(room, '+')) return;
+		let sd = target
+		room.say('/addhtmlbox <img src="' + Tools.sample(Tools.data.dexsprites.sd) + '" height=95, width=95>');
+	},
+
 
 	// Informational commands
 	about: function (target, room, user) {
@@ -218,17 +230,12 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Excadrill");
 	},
-	pants: 'pg',
-	pg: function (target, room, user) {
+	
+	pants: 'aphantom',
+	aphantom: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (room.id !== 'scrabble') return;
 		room.say("/me puts on pants");
-	},
-	ard: 'arandom',
-	arandom: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		if (room.id !== 'scrabble') return;
-		room.say("!dt Ducklett");
 	},
 	
 	spook: function (target, room, user) {
@@ -247,21 +254,16 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;
 		room.say("!dt Giratina-Origin");
 	},
+	
 	aesthetic: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		room.say("Ａｅｓｔｈｅｔｉｃ");
 	},
-
-	order: function (target, room, user) {
+	
+	strat: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (room.id !== 'scrabble') return;
 		room.say("!dt Zygarde-10%");
-	},
-	
-	azu: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		if (room.id !== 'scrabble') return;
-		room.say("!dt Celebi");
 	},
 	
 	sty: function (target, room, user) {
@@ -270,7 +272,7 @@ let commands = {
 		room.say("!dt Drifblim");
 	},
 	
-	qtie: function (target, room, user) {
+	jen: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (room.id !== 'scrabble') return;
 		room.say("!dt Glameow");
@@ -287,11 +289,10 @@ let commands = {
 		room.say("!dt Black Glasses");
 	},
 	
-	ryy: function (target, room, user) {
+	crit: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (room.id !== 'scrabble') return;
-		room.say("▲ ► ▼ ◄ ▲ ► ▼ ◄ ▼ ◄ ▲");
-		room.say("Sorry, I dropped my bag of doritos");
+		room.say("/me ponders the memeing of life");
 	},
 		
 	pq: function (target, room, user) {
@@ -299,12 +300,6 @@ let commands = {
 		if (room.id !== 'scrabble') return;
 		room.say("!dt piplup");
 		room.say("PQ a hoe");
-	},
-	
-	inac: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
-		if (room.id !== 'scrabble') return;
-		room.say("I swear I'm not playing league");
 	},
 	
 	pun: function (target, room, user) {
