@@ -41,10 +41,19 @@ let commands = {
 	sdsprite: 'dexsprite',
 	dexprite: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
-		let sd = target
+		let sd = target;
 		room.say('/addhtmlbox <img src="' + Tools.sample(Tools.data.dexsprites.sd) + '" height=95, width=95>');
 	},
 
+	encrypt: function (target, user, room) {
+        if (!user.isDeveloper()) return;
+        return user.say("Encrypted message: " + Tools.encrypt(target));
+    },
+
+    decrypt: function (target, user, room) {
+        if (!user.isDeveloper()) return;
+        return user.say("Decrypted message: " + Tools.decrypt(target));
+    },
 
 	// Informational commands
 	about: function (target, room, user) {
