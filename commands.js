@@ -9,7 +9,6 @@
 
 'use strict';
 
-/**@type {{[k: string]: Command | string}} */
 function getLB(word) {
 	word = Tools.toId(word);
 	if (word === 'scrabble') {
@@ -20,6 +19,7 @@ function getLB(word) {
 		return false;
 	}
 }
+/**@type {{[k: string]: Command | string}} */
 let commands = {
 	// Developer commands
 	js: 'eval',
@@ -360,25 +360,6 @@ let commands = {
 		target = split.slice().splice(1).join(",");
 		dd.addSecond(target);
 		room.say("Second place points awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");	
-	},
-	third: 'thirds',
-	thirds: function (target, room, user) {
-		if (!target) return;
-		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
-		let split = target.split(",");
-		if (split.length < 2) {
-			return room.say("You must specify the leaderboard you are adding to");
-		}
-		let dd = getLB(split[0]);
-		if (!dd) {
-			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
-		}
-		if (dd.name !== "Scrabble") {
-			return room.say("You can only add third place to the Scrabble leaderboard.");
-		}
-		target = split.slice().splice(1).join(",");
-		dd.addThird(target);
-		room.say("Third place awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");
 	},
 	highscores: 'toppoints',
 	highscore: 'toppoints',
