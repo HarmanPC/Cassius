@@ -10,7 +10,6 @@ class DD {
 		this.firstpoints = 10;
 		this.secondpoints = 7;
 		this.partpoints = 3;
-		this.toppoints = 3;
 		this.name = "Scrabble";
 	}
 
@@ -29,12 +28,12 @@ class DD {
 	getStr(num) {
 		let sorted = this.getSorted();
 		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
-		let indices = ["Rank", "Name", "Firsts", "Seconds", "Parts", "High Scores", "Points"];
+		let indices = ["Rank", "Name", "Firsts", "Seconds", "Parts", "Points"];
 		for (let i = 0; i < indices.length; i++) {
 			str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
 		}
 		str += "</tr>"
-		let real = [4,0,1,2,3];
+		let real = [3,0,1,2];
 		let strs = [];
 		for (let i = Math.max(0, num - 5); i < num; i++) {
 			let strx = "<tr>";
@@ -67,7 +66,6 @@ class DD {
 				firsts: 1,
 				seconds: 0,
 				parts: 0,
-				toppoints: 0,
 				name: user.trim(),
 			}
 		} else {
@@ -82,7 +80,6 @@ class DD {
 				firsts: 0,
 				seconds: 1,
 				parts: 0,
-				toppoints: 0,
 				name: user.trim(),
 			}
 		} else {
@@ -97,29 +94,12 @@ class DD {
 				firsts: 0,
 				seconds: 0,
 				parts: 1,
-				toppoints: 0,
 				name: user.trim(),
 			}
 		} else {
 			this.lb[id].parts++;
 		}
 	}
-
-	addTop(user) {
-		let id = Tools.toId(user.trim());
-		if (!(id in this.lb)) {
-			this.lb[id] = {
-				firsts: 0,
-				seconds: 0,
-				parts: 0,
-				toppoints: 1,
-				name: user.trim(),
-			}
-		} else {
-			this.lb[id].toppoints++;
-		}
-	}
-
 	removeFirst(user) {
 		let id = Tools.toId(user);
 		if (!(id in this.lb) || this.lb[id].firsts === 0) {
@@ -150,24 +130,15 @@ class DD {
 		}
 	}
 
-	removeTop(user) {
-		let id = Tools.toId(user);
-		if (!(id in this.lb) || this.lb[id].toppoints === 0) {
-			return false
-		} else {
-			this.lb[id].parts--;
-			return true;
-		}
-	}
 	getPoints(item) {
-		return this.firstpoints * item[0] + this.secondpoints * item[1] + this.toppoints * item[3] + this.partpoints * item[2];
+		return this.firstpoints * item[0] + this.secondpoints * item[1] + this.partpoints * item[2];
 	}
 
 	getSorted() {
 		let items = [];
 		for (let id in this.lb) {
 			let item = this.lb[id];
-			items.push([item.firsts, item.seconds, item.parts, item.toppoints, item.name]);
+			items.push([item.firsts, item.seconds, item.parts, item.name]);
 		}
 		items.sort(function(first, second) {
 			let points1 = dd.getPoints(first);
@@ -175,8 +146,7 @@ class DD {
 			if (points1 !== points2) return points2 - points1;
 			if (first[1] !== second[1]) return second[1] - first[1];
 			if (first[2] !== second[2]) return second[2] - first[2];
-			if (first[3] !== second[3]) return second[3] - first[3];
-			return second[4] > first[4];
+			return second[3] > first[3];
 		});
 		return items;
 	}

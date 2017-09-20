@@ -361,27 +361,6 @@ let commands = {
 		dd.addSecond(target);
 		room.say("Second place points awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");	
 	},
-	highscores: 'toppoints',
-	highscore: 'toppoints',
-	toppoint: 'toppoints',
-	toppoints: function (target, room, user) {
-		if (!target) return;
-		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
-		let split = target.split(",");
-		if (split.length < 2) {
-			
-		}
-		let dd = getLB(split[0]);
-		if (!dd) {
-			return room.say("The valid leaderboards are Scrabble and Scrabblemons");
-		}
-		if (dd.name !== "Scrabble") {
-			return room.say("You can only add toppoints to the Scrabble leaderboard.");
-		}
-		target = split.slice().splice(1).join(",");
-		dd.addTop(target);
-		room.say("High Scores awarded to **" + target.trim() + "** on the Scrabble leaderboard.");
-	},
 
 	part: 'participation',
 	parts: 'participation',
