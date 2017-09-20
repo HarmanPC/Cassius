@@ -9,7 +9,6 @@ class DD {
 		this.modlog = {};
 		this.firstpoints = 10;
 		this.secondpoints = 7;
-		this.thirdpoints = 5;
 		this.partpoints = 3;
 		this.toppoints = 3;
 		this.name = "Scrabble";
@@ -30,20 +29,20 @@ class DD {
 	getStr(num) {
 		let sorted = this.getSorted();
 		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
-		let indices = ["Rank", "Name", "Firsts", "Seconds", "Thirds", "Parts", "High Scores", "Points"];
+		let indices = ["Rank", "Name", "Firsts", "Seconds", "Parts", "High Scores", "Points"];
 		for (let i = 0; i < indices.length; i++) {
 			str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
 		}
 		str += "</tr>"
-		let real = [5,0,1,2,3,4];
+		let real = [4,0,1,2,3];
 		let strs = [];
 		for (let i = Math.max(0, num - 5); i < num; i++) {
 			let strx = "<tr>";
-			for (let j = 0; j < 8; j++) {
+			for (let j = 0; j < 7; j++) {
 				let stuff;
 				if (j === 0) {
 					stuff = i+1;
-				} else if (j === 7) {
+				} else if (j === 6) {
 					stuff = dd.getPoints(sorted[i]);
 				} else {
 					stuff = sorted[i][real[j - 1]];
@@ -61,23 +60,6 @@ class DD {
 		fs.writeFileSync('./databases/scrabblelb.json', JSON.stringify(this.lb));
 	}
 
-	addThird(user) {
-		let name = user.trim();
-		let id = Tools.toId(name);
-		if (!(id in this.lb)) {
-			this.lb[id] = {
-				firsts: 0,
-				seconds: 0,
-				parts: 0,
-				thirds: 1,
-				toppoints: 0,
-				name: name,
-			}
-		} else {
-			this.lb[id].thirds++;
-		}
-	}
-
 	addFirst(user) {
 		let id = Tools.toId(user.trim());
 		if (!(id in this.lb)) {
@@ -85,7 +67,6 @@ class DD {
 				firsts: 1,
 				seconds: 0,
 				parts: 0,
-				thirds: 0,
 				toppoints: 0,
 				name: user.trim(),
 			}
@@ -101,7 +82,6 @@ class DD {
 				firsts: 0,
 				seconds: 1,
 				parts: 0,
-				thirds: 0,
 				toppoints: 0,
 				name: user.trim(),
 			}
@@ -117,7 +97,6 @@ class DD {
 				firsts: 0,
 				seconds: 0,
 				parts: 1,
-				thirds: 0,
 				toppoints: 0,
 				name: user.trim(),
 			}
@@ -133,22 +112,11 @@ class DD {
 				firsts: 0,
 				seconds: 0,
 				parts: 0,
-				thirds: 0,
 				toppoints: 1,
 				name: user.trim(),
 			}
 		} else {
 			this.lb[id].toppoints++;
-		}
-	}
-
-	removeThird(user) {
-		let id = Tools.toId(user);
-		if (!(id in this.lb) || this.lb[id].thirds === 0) {
-			return false;
-		} else {
-			this.lb[id].thirds--;
-			return true;
 		}
 	}
 
@@ -192,14 +160,14 @@ class DD {
 		}
 	}
 	getPoints(item) {
-		return this.firstpoints * item[0] + this.secondpoints * item[1] + this.thirdpoints * item[2] + this.toppoints * item[3] + this.partpoints * item[4];
+		return this.firstpoints * item[0] + this.secondpoints * item[1] + this.toppoints * item[3] + this.partpoints * item[2];
 	}
 
 	getSorted() {
 		let items = [];
 		for (let id in this.lb) {
 			let item = this.lb[id];
-			items.push([item.firsts, item.seconds, item.thirds, item.parts, item.toppoints, item.name]);
+			items.push([item.firsts, item.seconds, item.parts, item.toppoints, item.name]);
 		}
 		items.sort(function(first, second) {
 			let points1 = dd.getPoints(first);
@@ -208,8 +176,7 @@ class DD {
 			if (first[1] !== second[1]) return second[1] - first[1];
 			if (first[2] !== second[2]) return second[2] - first[2];
 			if (first[3] !== second[3]) return second[3] - first[3];
-			if (first[4] !== second[4]) return second[4] - first[4];
-			return second[5] > first[5];
+			return second[4] > first[4];
 		});
 		return items;
 	}
