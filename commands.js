@@ -568,10 +568,10 @@ let commands = {
 		let scrabmonslb = scrabmonlb.getSorted();
 		let str = "", i;
 		for (i = 0; i < scrabbleLB.length; i++) {
-			if (Tools.toId(scrabbleLB[i][5]) === targetID) break;
+			if (Tools.toId(scrabbleLB[i][3]) === targetID) break;
 		}
 		if (i !== scrabbleLB.length) {
-			user.say("**" + scrabbleLB[i][5] + "** is #" + (i + 1) + " on the Scrabble leaderboard with " + scrabbleLB[i][0] + " first place finishes, " + scrabbleLB[i][1] + " second place finishes, " + scrabbleLB[i][2] + " third place finishes, " + scrabbleLB[i][3] + " participations, and " + scrabbleLB[i][4] + " high-scores.");
+			user.say("**" + scrabbleLB[i][3] + "** is #" + (i + 1) + " on the Scrabble leaderboard with " + scrabbleLB[i][0] + " first place finishes, " + scrabbleLB[i][1] + " second place finishes, and " + scrabbleLB[i][2] + " participations.");
 		} else {
 			user.say("**" + targetName + "** does not have any points on the Scrabble leaderboard.");
 		}

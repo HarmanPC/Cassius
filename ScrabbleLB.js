@@ -14,7 +14,7 @@ class DD {
 	}
 
 	getNameIndex() {
-		return 4;
+		return 3;
 	}
 	
 	importData() {
@@ -115,7 +115,7 @@ class DD {
 		if (!(id in this.lb) || this.lb[id].seconds === 0) {
 			return false
 		} else {
-			this.lb[id].hosts--;
+			this.lb[id].seconds--;
 			return true;
 		}
 	}
