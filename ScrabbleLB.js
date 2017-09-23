@@ -37,11 +37,11 @@ class DD {
 		let strs = [];
 		for (let i = Math.max(0, num - 5); i < num; i++) {
 			let strx = "<tr>";
-			for (let j = 0; j < 7; j++) {
+			for (let j = 0; j < 6; j++) {
 				let stuff;
 				if (j === 0) {
 					stuff = i+1;
-				} else if (j === 6) {
+				} else if (j === 5) {
 					stuff = dd.getPoints(sorted[i]);
 				} else {
 					stuff = sorted[i][real[j - 1]];
