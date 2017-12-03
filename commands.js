@@ -32,6 +32,12 @@ let commands = {
 			this.say(e.name + ": " + e.message);
 		}
 	},
+
+    testroom: function (target, room, user) {
+        if (!user.isDeveloper()) return;
+        Rooms.get("scrabble").say("/makegroupchat test");
+        user.say("Join <<groupchat-scrabblee-test>>!");
+    },
 	//SpookDex commands
 	gettype: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
@@ -204,14 +210,35 @@ let commands = {
 		}
 	},
 	
-	//client.send("scrabble|/mn	
-	// Game commands
 	signups: 'creategame',
 	creategame: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (!Config.games || !Config.games.includes(room.id)) return this.say("Games are not enabled for this room.");
 		if (!Games.createGame(target, room)) return;
 		room.game.signups();
+	},
+	scrabblegame: function (target, room, user) {
+		if (!user.hasRank(Rooms.get('scrabble'), '%')) return;
+		let i = 1;
+		while (Rooms.get("groupchat-scrabblee-scrabble" + i)) {
+			i += 1;
+		}
+		global.awaitingscrab = true;
+		global.scrabroom = room;
+		Rooms.get('scrabble').say("/makegroupchat scrabble" + i);
+	},
+	games: function (target, room, user) {
+		if (!user.hasRank(Rooms.get('scrabble'), '%')) return;
+		let scrabrooms = [];
+		for (let roomid in Rooms.rooms) {
+			let room = Rooms.get(roomid);
+			if (room.id.startsWith('groupchat')) scrabrooms.push("<<" + room.id + ">>");
+		}
+		if (scrabrooms.length === 0) {
+			return room.say("No games of scrabble are in progress.");
+		} else {
+			return room.say("Current Scrabble games: " + scrabrooms.join(", "));
+		}
 	},
 	start: 'startgame',
 	startgame: function (target, room, user) {
@@ -592,7 +619,9 @@ let commands = {
 		scrabblelb.exportData();
 		scrabmonlb.exportData();
 		return user.say("Scrabble and Scrabblemons leaderboards have been reset.");
-	}
+	},
+
+    
 };
 
 module.exports = commands;

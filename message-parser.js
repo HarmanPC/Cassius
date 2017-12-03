@@ -103,6 +103,7 @@ class MessageParser {
 		if (typeof Config.parseMessage === 'function') {
 			if (Config.parseMessage(room, messageType, splitMessage) === false) return;
 		}
+		console.log(messageType + "|" + splitMessage);
 		switch (messageType) {
 		case 'challstr':
 			Client.challengeKeyId = splitMessage[0];
@@ -126,10 +127,22 @@ class MessageParser {
 			break;
 		case 'init':
 			room.onJoin(Users.self, ' ');
+			if (!global.awaitingscrab && room.id.startsWith('groupchat')) return room.say("/deleteroom " + room.id);
 			console.log('Joined room: ' + room.id);
+			if (room.id.startsWith("groupchat") && global.awaitingscrab) {
+				Games.createGame('scrabble', room);
+				global.awaitingscrab = false;
+				if (room.game) {
+					global.scrabroom.say("Join <<" + room.id + ">> for a game of scrabble!");
+					room.game.signups();
+				} else {
+					global.scrabroom.say("Unable to make a game of scrabble :(");
+				}
+			}
 			break;
 		case 'noinit':
 			console.log('Could not join room: ' + room.id);
+			if (room.id === 'scrabble') return;
 			Rooms.destroy(room);
 			break;
 		case 'deinit':
@@ -198,6 +211,13 @@ class MessageParser {
 			this.parseCommand(message, room, user, time);
 			if (!user.hasRank(room, '+')) this.moderate(message, room, user, time);
 			break;
+		}
+		case 'html': {
+			let message = splitMessage.join("|");
+			if (message.includes('<div class="message-error">') && message.includes('Due to high load, you are limited to creating')) {
+				global.scrabroom.say("No more gchats :(");
+				global.awaitingscrab = false;
+			}
 		}
 		case 'pm': {
 			let user = Users.add(splitMessage[0]);

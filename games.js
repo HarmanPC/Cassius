@@ -180,6 +180,7 @@ class Game {
 	}
 
 	start() {
+		//if (this.playerCount < 2) return this.say("The game needs at least 2 players to start.");
 		if (this.started || (this.modeId === 'team' && this.playerCount < 2)) return;
 		this.started = true;
 		if (typeof this.onStart === 'function') this.onStart();
@@ -204,6 +205,7 @@ class Game {
 			this.parentGame.forceEnd();
 			return;
 		}
+		if (typeof this.onEnd === 'function') this.onEnd();
 		this.say("The game was forcibly ended.");
 		this.ended = true;
 		this.room.game = null;
