@@ -89,8 +89,8 @@ class Scrabble extends Games.Game {
                 this.tiles.push(letter.toUpperCase());
             }
         }
-        //this.tiles = Tools.shuffle(this.tiles);
-		this.tiles = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"];
+        this.tiles = Tools.shuffle(this.tiles);
+		//this.tiles = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"];
         this.board = [["TW", "-", "-", "DL", "-", "-", "-", "TW", "-", "-", "-", "DL", "-", "-", "TW"],
         ["-", "DW", "-", "-", "-", "TL", "-", "-", "-", "TL", "-", "-", "-", "DW", "-"],
         ["-", "-", "DW", "-", "-", "-",  "DL", "-", "DL", "-", "-", "-", "DW", "-", "-"],
