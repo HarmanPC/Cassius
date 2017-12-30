@@ -1,5 +1,8 @@
 'use strict';
 
+const Room = require('../rooms').Room; // eslint-disable-line no-unused-vars
+const User = require('../users').User; // eslint-disable-line no-unused-vars
+const Player = require('../games').Player;
 const letters = {
     a: 9,
     b: 2,
@@ -69,6 +72,9 @@ const colors = {
     "-": "#CAC3A7",
 }
 
+/**
+ * @param {string} tile
+ */
 function getColor(tile) {
     if (tile in colors) {
         return colors[tile];
@@ -79,10 +85,17 @@ function getColor(tile) {
 const name = "Scrabble";
 const id = Tools.toId(name);
 
+// @ts-ignore
 class Scrabble extends Games.Game {
+	/**
+	 * @param {Room} room
+	 */
     constructor(room) {
-        super(room);
-        this.tiles = [];
+		super(room);
+		/** @type {string[]} */
+		this.tiles = [];
+		/**@type {?NodeJS.Timer} */
+		this.timeout = null;
         for (let letter in letters) {
             let num = letters[letter];
             for (let i = 0; i < num; i++) {
@@ -91,6 +104,7 @@ class Scrabble extends Games.Game {
         }
         this.tiles = Tools.shuffle(this.tiles);
 		//this.tiles = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"];
+		/** @type {string[][]} */
         this.board = [["TW", "-", "-", "DL", "-", "-", "-", "TW", "-", "-", "-", "DL", "-", "-", "TW"],
         ["-", "DW", "-", "-", "-", "TL", "-", "-", "-", "TL", "-", "-", "-", "DW", "-"],
         ["-", "-", "DW", "-", "-", "-",  "DL", "-", "DL", "-", "-", "-", "DW", "-", "-"],
@@ -127,14 +141,21 @@ class Scrabble extends Games.Game {
         this.numCols = this.board[0].length;
         this.hands = new Map();
 		this.points = new Map();
+		this.num = -1;
+		this.playerOrder = [];
     }
 
     onStart() {
 		this.say("/modchat +");
-        for (let userID in this.players) {
-            let player = this.players[userID];
+		this.say("To check some info about the point values of letters, visit http://www.thewordfinder.com/scrabble-point-values.php/");
+		let commandNames = ["playword", "pass", "showboard", "scores", "tilesleft", "hand"];
+		this.say("Command list: " + commandNames.map(command => "``" + Config.commandCharacter + command  + "``").join(", "));
+		for (let userID in this.players) {
+			let player = this.players[userID];
+			/** @type {string[]} */
             let hand = [];
             for (let i = 0; i < 7; i++) {
+				// @ts-ignore
                 hand += this.tiles.shift();
             }
 			this.points.set(player, 0);
@@ -146,7 +167,7 @@ class Scrabble extends Games.Game {
         }
 		this.playerOrder = Tools.shuffle(Object.values(this.players));
 		this.say("/wall The player order for this game is: " + this.playerOrder.map(pl => pl.name).join(", "));
-		this.num = -1;
+		
 		this.timeout = setTimeout(() => this.nextPlayer(), 5 * 1000);
 	}
 
@@ -159,7 +180,12 @@ class Scrabble extends Games.Game {
 		this.displayBoard();
 		this.canPlay = true;
 		this.say("/wall " + this.curPlayer.name + ", you're up! Commands: ``" + Config.commandCharacter + "playword [location], right/down, word``, or in PMs, ``" + Config.commandCharacter + "pass [letters]``");
-		this.timeout = setTimeout(() => this.skipPlayer(), this.roundTimer * 1000);
+		this.timeout = setTimeout(() => this.remindPlayer(), this.roundTimer * 2 / 3 * 1000);
+	}
+
+	remindPlayer() {
+		this.say("**" + this.curPlayer.name + "**, you have **" + this.roundTimer * 1 / 3 + "** seconds remaining!");
+		this.timeout = setTimeout(() => this.skipPlayer(), this.roundTimer * 1 / 3);
 	}
 
 	skipPlayer() {
@@ -168,6 +194,9 @@ class Scrabble extends Games.Game {
 		this.timeout = setTimeout(() => this.nextPlayer(), 5 * 1000);
 	}
 
+	/**
+	 * @param {Player} player
+	 */
     sayHand(player) {
 		player.say("Your hand: ");
 		let tiles = this.hands.get(player);
@@ -208,6 +237,10 @@ class Scrabble extends Games.Game {
 		this.say("!htmlbox " + str);
     }
 
+	/**
+	 * @param {string} oldLetter
+	 * @param {string} newLetter
+	 */
 	getPoints(oldLetter, newLetter) {
 		let points = charpoints[newLetter.toLowerCase()];
 		if (oldLetter === newLetter) {
@@ -236,7 +269,12 @@ class Scrabble extends Games.Game {
 		return board;
 	}
 
+	/**
+	 * 
+	 * @param {string} loc 
+	 */
 	getLoc(loc) {
+		/** @type {string | number} */
 		let col = loc[0].toUpperCase();
 		col = "ABCDEFGHIJKLMNO".indexOf(col);
 		let row = parseInt(loc.substr(1))
@@ -244,9 +282,13 @@ class Scrabble extends Games.Game {
 		return [row, col];
 	}
 
+	/**
+	 * @param {string[][]} copyboard
+	 * @param {Player} player
+	 */
 	isLegalMove(copyboard, player) {
 		if (this.board[7][7] === "★" && copyboard[7][7] === "★") {
-			return "Your turn muse use the center ★ square.";
+			return "Your turn must use the center ★ square.";
 		}
 		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		let copyhand = this.hands.get(player).slice();
@@ -288,6 +330,7 @@ class Scrabble extends Games.Game {
 						j += 1;
 					}
 					
+					// @ts-ignore
 					if (scrabwords.indexOf(Tools.toId(word).toUpperCase()) === -1 && word.length > 1) return "I don't recognize the word **" + word + "**.";
 					if (isNew && word.length > 1) {
 						totpoints += (points * mult);
@@ -317,6 +360,7 @@ class Scrabble extends Games.Game {
 						if (copyboard[i][j] !== this.board[i][j]) isNew = true;
 						i += 1;
 					}
+					// @ts-ignore
 					if (scrabwords.indexOf(Tools.toId(word).toUpperCase()) === -1 && word.length > 1) return "I don't recognize the word **" + word + "**.";
 					
 					if (isNew && word.length > 1) {
@@ -331,10 +375,19 @@ class Scrabble extends Games.Game {
 		return totpoints;
 	}
 
+	/**
+	 * @param {string[][]} board
+	 */
 	printBoard(board) {
 		console.log(board.map(row => row.join(", ")).join("\n"));
 	}
 
+	/**
+	 * 
+	 * @param {number[]} loc
+	 * @param {string} direction
+	 * @param {string} word
+	 */
 	doesConnect(loc, direction, word) {
 		if (this.board[7][7] === "★") return true;
 		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -358,6 +411,11 @@ class Scrabble extends Games.Game {
 		return false;
 	}
 
+	/**
+	 * @param {string} target
+	 * @param {Room} room
+	 * @param {User} user
+	 */
 	playword(target, room, user) {
 		let player = this.players[user.id]
 		if (player !== this.curPlayer || !this.canPlay) return;
@@ -366,6 +424,7 @@ class Scrabble extends Games.Game {
 			return this.say("You must specify your location, direction, and word you are playing");
 		}
 		let letters = "abcdefghijklmno";
+		/** @type {string | number[]} */
 		let loc = Tools.toId(split[0]);
 		if (loc.length > 3) return this.say("Your location must be in the format [column-letter][row-number] (e.g. a6");
 		if (letters.indexOf(loc[0]) === -1) return this.say("Your column name must be between ``A`` and ``Z``, inclusive.");
@@ -403,7 +462,7 @@ class Scrabble extends Games.Game {
 		if (typeof legalMove === "string") {
 			return this.say(legalMove);
 		} else {
-			clearTimeout(this.timeout);
+			if (this.timeout) clearTimeout(this.timeout);
 			this.say("/wall " + this.curPlayer.name + " earned **" + legalMove + "** points!");
 			this.points.set(this.curPlayer, this.points.get(this.curPlayer) + legalMove);
 			this.board = copyboard;
@@ -425,7 +484,7 @@ class Scrabble extends Games.Game {
 		for (let userID in this.players) {
 			let player = this.players[userID];
 			let hand = this.hands.get(player);
-			let pointsLost = hand.split("").map(letter => letter === " " ? 50 : charpoints[letter.toLowerCase()]).reduce((a, b) => a + b, 0);
+			let pointsLost = hand.split("").map((/** @type {string} */ letter) => letter === " " ? 50 : charpoints[letter.toLowerCase()]).reduce((/** @type {number} */ a, /** @type {number} */ b) => a + b, 0);
 			this.points.set(player, this.points.get(player) - pointsLost);
 		}
 		for (let userID in this.players) {
@@ -441,6 +500,10 @@ class Scrabble extends Games.Game {
 		this.say("/deleteroom " + this.room.id);
 	}
 
+	/**
+	 * @param {string} target
+	 * @param {User} user
+	 */
 	pass(target, user) {
 		let player = this.players[user.id];
 		if (player !== this.curPlayer || !this.canPlay) return;
@@ -461,10 +524,14 @@ class Scrabble extends Games.Game {
 		this.hands.set(player, hand);
 		this.sayHand(player);
 		this.say("**" + player.name + "** has decided to pass!");
-		clearTimeout(this.timeout);
+		if (this.timeout) clearTimeout(this.timeout);
 		this.nextPlayer();
 	}
 
+	/**
+	 * @param {String} target
+	 * @param {User} user
+	 */
 	scores(target, user) {
 		if (!this.started) return;
 		for (let userID in this.players) {
@@ -479,15 +546,35 @@ class Scrabble extends Games.Game {
 			.join(", "));
 	}
 
-	tilesleft(target, usre) {
+	/**
+	 * @param {String} target
+	 * @param {User} user
+	 */
+	tilesleft(target, user) {
 		if (!this.started) return;
-		return this.say("There are **" + this.tiles.length + "**tiles remaining.");
+		return this.say("There are **" + this.tiles.length + "** tiles remaining.");
 	}
 
+	/**
+	 * @param {String} target
+	 * @param {User} user
+	 */
 	showboard(target, user) {
+		if (!this.started) return;
 		let player = this.players[user.id];
 		if (player !== this.curPlayer || !this.canPlay) return;
 		this.displayBoard();
+	}
+
+	/**
+	 * @param {String} target
+	 * @param {User} user
+	 */
+	hand(target, user) {
+		if (!this.started) return;
+		let player = this.players[user.id];
+		if (!player || player.eliminated) return;
+		this.sayHand(player);
 	}
 }
 
@@ -500,7 +587,11 @@ exports.commands = {
 	showboard: "showboard",
 	scores: "scores",
 	tilesleft: "tilesleft",
+	hand: "hand",
+	showhand: "hand",
+	tiles: "hand",
 };
 exports.pmCommands = {
 	pass: true,
+	hand: true,
 };

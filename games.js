@@ -51,6 +51,7 @@ class Player {
 		this.eliminated = false;
 		/**@type {?string} */
 		this.team = null;
+		this.points = 0;
 	}
 
 	/**
