@@ -136,7 +136,7 @@ class Scrabble extends Games.Game {
         ["-", "-", "DW", "-", "-", "-",  "DL", "-", "DL", "-", "-", "-", "DW", "-", "-"],
         ["-", "DW", "-", "-", "-", "TL", "-", "-", "-", "TL", "-", "-", "-", "DW", "-"],
         ["TW", "-", "-", "DL", "-", "-", "-", "TW", "-", "-", "-", "DL", "-", "-", "TW"]];
-		this.roundTimer = 90;
+		this.roundTimer = 120;
         this.numRows = this.board.length;
         this.numCols = this.board[0].length;
         this.hands = new Map();
@@ -185,7 +185,7 @@ class Scrabble extends Games.Game {
 
 	remindPlayer() {
 		this.say("**" + this.curPlayer.name + "**, you have **" + this.roundTimer * 1 / 3 + "** seconds remaining!");
-		this.timeout = setTimeout(() => this.skipPlayer(), this.roundTimer * 1 / 3);
+		this.timeout = setTimeout(() => this.skipPlayer(), this.roundTimer * 1 / 3 * 1000);
 	}
 
 	skipPlayer() {
