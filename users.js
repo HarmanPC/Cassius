@@ -31,14 +31,17 @@ class User {
 	}
 
 	/**
-	 * @param {Room | string} room
+	 * @param {Room | User | string} room
 	 * @param {string} targetRank
 	 * @return {boolean}
 	 */
 	hasRank(room, targetRank) {
 		if (!Config.groups) return false;
 		let rank;
-		if (typeof room === 'string') {
+		// @ts-ignore
+		if (typeof room === 'User') {
+			rank = ' ';
+		} else if (typeof room === 'string') {
 			rank = room;
 		} else {
 			rank = this.rooms.get(room);

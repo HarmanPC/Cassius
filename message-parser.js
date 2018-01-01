@@ -103,7 +103,6 @@ class MessageParser {
 		if (typeof Config.parseMessage === 'function') {
 			if (Config.parseMessage(room, messageType, splitMessage) === false) return;
 		}
-		console.log(messageType + "|" + splitMessage);
 		switch (messageType) {
 		case 'challstr':
 			Client.challengeKeyId = splitMessage[0];

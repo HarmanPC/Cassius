@@ -23,13 +23,7 @@ try {
 
 global.Config = require('./config.js');
 if (!Config.username) throw new Error("Please specify a username in config.js");
-let d = parseInt(process.argv[2]);
-if (!d) {
-	console.log("You must specify your decryption key");
-	process.exit();
-}
-Config.d = d;
-Config.password = Tools.decrypt(Config.password);
+
 global.Commands = require('./commands.js');
 
 global.Rooms = require('./rooms.js').Rooms;
@@ -42,6 +36,9 @@ global.Client = require('./client.js');
 
 global.Games = require('./games.js').Games;
 Games.loadGames();
+
+global.Ratings = require('./ratings.js');
+Ratings.onLoad();
 
 global.scrabblelb = require('./ScrabbleLB.js');
 scrabblelb.importData();

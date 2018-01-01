@@ -497,6 +497,12 @@ class Scrabble extends Games.Game {
 			})
 			.map(pl => pl.name + " (" + this.points.get(pl) + ")")
 			.join(", "));
+		let stuff = {};
+		for (let userID in this.players) {
+			stuff[userID] = this.players[userID].points;
+		}
+		// @ts-ignore
+		Ratings.onMatchEnd(stuff);
 		this.say("/deleteroom " + this.room.id);
 	}
 

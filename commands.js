@@ -540,7 +540,34 @@ let commands = {
 			room.say("I was unable to remove participations from **" + bad.join(", ") + "**.");
 		}
 	},
-	
+
+	toprating: 'topratings',
+	topratings: function (target, room, user) {
+		if (!user.hasRank(room, '+') && room !== user) return;
+		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
+		let indices = ["Name", "Rating"];
+		for (let i = 0; i < indices.length; i++) {
+			str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
+		}
+		str += "</tr>"
+		let sorted = Ratings.getSorted();
+		let strs = [];
+		for (let info of sorted) {
+			let strx = "<tr>";
+			for (let data of info) {
+				strx += "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + data + "</font></b></td>";
+			}
+			strs.push(strx + "</tr>");
+		}
+		str += strs.join("");
+		str += "</table></body></html></div>";
+		if (room === user) {
+			Rooms.get('scrabble').say('/pminfobox ' + user.id + ", " + str);
+		} else {
+			this.say("/addhtmlbox " + str);
+		}
+	},
+
 	top: function (target, room, user) {
 		if (!user.hasRank(room, '+') && room !== user) return;
 		let split = target.split(",");
@@ -558,7 +585,7 @@ let commands = {
 		if (room === user) {
 			let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
 			let indices = ["Rank", "Name", "Points"];
-			for (let i = 0; i < 3; i++) {
+			for (let i = 0; i < indices.length; i++) {
 				str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
 			}
 			str += "</tr>"
