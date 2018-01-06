@@ -209,7 +209,7 @@ class Scrabble extends Games.Game {
 	 * @param {Player} player
 	 */
     sayHand(player) {
-		let user = Users.get('player');
+		let user = Users.get(player.id);
 		if (!user.rooms.has(Rooms.get('scrabble'))) return user.say("You must be in the Scrabble room for me to give you your hand.");
 		player.say("Your hand: ");
 		let tiles = this.hands.get(player);
