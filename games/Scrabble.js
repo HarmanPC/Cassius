@@ -143,12 +143,23 @@ class Scrabble extends Games.Game {
 		this.points = new Map();
 		this.num = -1;
 		this.playerOrder = [];
-    }
+	}
+
+	/**
+	 * @param {User} user
+	 */
+	onLeave(user) {
+		if (!this.started) return;
+		let player = this.players[user.id];
+		this.playerOrder.splice(this.playerOrder.indexOf(player));
+		player.points = 0;
+		if (this.getRemainingPlayerCount() === 1) return this.end();
+	}
 
     onStart() {
 		this.say("/modchat +");
 		this.say("To check some info about the point values of letters, visit http://www.thewordfinder.com/scrabble-point-values.php/");
-		let commandNames = ["playword", "pass", "showboard", "scores", "tilesleft", "hand"];
+		let commandNames = ["playword", "pass", "showboard", "scores", "tilesleft", "hand", "rearrange"];
 		this.say("Command list: " + commandNames.map(command => "``" + Config.commandCharacter + command  + "``").join(", "));
 		for (let userID in this.players) {
 			let player = this.players[userID];
@@ -198,6 +209,8 @@ class Scrabble extends Games.Game {
 	 * @param {Player} player
 	 */
     sayHand(player) {
+		let user = Users.get('player');
+		if (!user.rooms.has(Rooms.get('scrabble'))) return user.say("You must be in the Scrabble room for me to give you your hand.");
 		player.say("Your hand: ");
 		let tiles = this.hands.get(player);
 		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
@@ -582,6 +595,25 @@ class Scrabble extends Games.Game {
 		if (!player || player.eliminated) return;
 		this.sayHand(player);
 	}
+
+	/**
+	 * @param {string} target
+	 * @param {User} user
+	 */
+	rearrange(target, user) {
+		let player = this.players[user.id];
+		if (!player || player.eliminated || !this.started) return;
+		target = Tools.toId(target);
+		let hand = this.hands.get(player);
+		let sorted = target.split("").sort();
+		let sortedhand = hand.sort();
+		if (sorted.length !== sorted.length) return player.say("Invalid rearrangement");
+		for (let i = 0; i < sorted.length; i++) {
+			if (sorted[i] !== sortedhand[i]) return player.say("Invalid rearrangement");
+		}
+		this.hands.set(player, target.split(""));
+		this.sayHand(player);
+	}
 }
 
 exports.game = Scrabble;
@@ -596,8 +628,10 @@ exports.commands = {
 	hand: "hand",
 	showhand: "hand",
 	tiles: "hand",
+	rearrange: "rearrange",
 };
 exports.pmCommands = {
 	pass: true,
 	hand: true,
+	rearrange: true,
 };

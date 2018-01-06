@@ -51,16 +51,6 @@ let commands = {
 		room.say('/addhtmlbox <img src="' + Tools.sample(Tools.data.dexsprites.sd) + '" height=95, width=95>');
 	},
 
-	encrypt: function (target, user, room) {
-        if (!user.isDeveloper()) return;
-        return user.say("Encrypted message: " + Tools.encrypt(target));
-    },
-
-    decrypt: function (target, user, room) {
-        if (!user.isDeveloper()) return;
-        return user.say("Decrypted message: " + Tools.decrypt(target));
-    },
-
 	// Informational commands
 	about: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
@@ -70,11 +60,6 @@ let commands = {
 	beep: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("boop");
-	},
-
-	argbeep: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say("/me boops " + target);
 	},
 	
 	hug: function (target, room, user) {
@@ -115,16 +100,6 @@ let commands = {
 	dab: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;
 		room.say("/me dabs");
-	},
-	
-	argdab: function (target, room, user) {
-        if (room !== user && !user.hasRank(room, '+')) return;
-        room.say("/me dabs on " + target);
-    },
-	
-	argdunk: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
-		room.say("/me dunks on " + target);
 	},
 	
 	git: function (target, room, user) {
@@ -523,33 +498,6 @@ let commands = {
 		}
 	},
 
-	toprating: 'topratings',
-	topratings: function (target, room, user) {
-		if (!user.hasRank(room, '+') && room !== user) return;
-		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
-		let indices = ["Name", "Rating"];
-		for (let i = 0; i < indices.length; i++) {
-			str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
-		}
-		str += "</tr>"
-		let sorted = Ratings.getSorted();
-		let strs = [];
-		for (let info of sorted) {
-			let strx = "<tr>";
-			for (let data of info) {
-				strx += "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + data + "</font></b></td>";
-			}
-			strs.push(strx + "</tr>");
-		}
-		str += strs.join("");
-		str += "</table></body></html></div>";
-		if (room === user) {
-			Rooms.get('scrabble').say('/pminfobox ' + user.id + ", " + str);
-		} else {
-			this.say("/addhtmlbox " + str);
-		}
-	},
-
 	top: function (target, room, user) {
 		if (!user.hasRank(room, '+') && room !== user) return;
 		let split = target.split(",");
@@ -630,7 +578,41 @@ let commands = {
 		return user.say("Scrabble and Scrabblemons leaderboards have been reset.");
 	},
 
-    
+	// ratings
+    toprating: 'topratings',
+	topratings: function (target, room, user) {
+		if (!user.hasRank(room, '+') && room !== user) return;
+		let str = "<div style=\"overflow-y: scroll; max-height: 250px;\"><div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
+		let indices = ["Name", "Rating"];
+		for (let i = 0; i < indices.length; i++) {
+			str +=  "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + indices[i] + "</font></b></td>";
+		}
+		str += "</tr>"
+		let sorted = Ratings.getSorted();
+		let strs = [];
+		for (let info of sorted) {
+			let strx = "<tr>";
+			for (let data of info) {
+				strx += "<td style=background-color:#FFFFFF; height=\"30px\"; align=\"center\"><b><font color=\"black\">" + data + "</font></b></td>";
+			}
+			strs.push(strx + "</tr>");
+		}
+		str += strs.join("");
+		str += "</table></body></html></div></div>";
+		if (room === user) {
+			Rooms.get('scrabble').say('/pminfobox ' + user.id + ", " + str);
+		} else {
+			this.say("/addhtmlbox " + str);
+		}
+	},
+
+	rating: 'myrating',
+	myrating: function (target, room, user) {
+		if (room !== user) return;
+		let targetID = target ? Tools.toId(target) : Tools.toId(user.id);
+		if (!(targetID in Ratings.ratings)) return user.say("**" + targetID + "** does not have a rating.");
+		user.say("**" + targetID + "** currently has a Scrabble rating of **" + Ratings.ratings[targetID][0] + "**!");
+	}
 };
 
 module.exports = commands;
