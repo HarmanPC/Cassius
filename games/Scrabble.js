@@ -151,9 +151,12 @@ class Scrabble extends Games.Game {
 	onLeave(user) {
 		if (!this.started) return;
 		let player = this.players[user.id];
+		let index = this.playerOrder.indexOf(player);
+		if (index <= this.num) this.num--;
 		this.playerOrder.splice(this.playerOrder.indexOf(player));
 		player.points = 0;
 		if (this.getRemainingPlayerCount() === 1) return this.end();
+		if (player === this.curPlayer) this.nextPlayer();
 	}
 
     onStart() {
