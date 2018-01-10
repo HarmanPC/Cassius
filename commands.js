@@ -274,7 +274,7 @@ let commands = {
 	sty: function (target, room, user) {
 		if (!user.hasRank(room, '+')) return;
 		if (room.id !== 'scrabble') return;
-		room.say("!dt Drifblim");
+		room.say("!dt Mawile");
 	},
 	
 	jen: function (target, room, user) {
