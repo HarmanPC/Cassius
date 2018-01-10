@@ -130,6 +130,7 @@ class MessageParser {
 			console.log('Joined room: ' + room.id);
 			if (room.id.startsWith("groupchat") && global.awaitingscrab) {
 				Games.createGame('scrabble', room);
+				if (global.notimer) room.game.roundTimer = 120000;
 				global.awaitingscrab = false;
 				if (room.game) {
 					global.scrabroom.say("Join <<" + room.id + ">> for a game of scrabble!");

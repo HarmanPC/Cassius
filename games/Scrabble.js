@@ -102,7 +102,8 @@ class Scrabble extends Games.Game {
                 this.tiles.push(letter.toUpperCase());
             }
         }
-        this.tiles = Tools.shuffle(this.tiles);
+		this.tiles = Tools.shuffle(this.tiles);
+		//this.tiles = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
 		//this.tiles = ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"];
 		/** @type {string[][]} */
         this.board = [["TW", "-", "-", "DL", "-", "-", "-", "TW", "-", "-", "-", "DL", "-", "-", "TW"],
@@ -229,7 +230,7 @@ class Scrabble extends Games.Game {
 
     displayBoard() {
         let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\">";
-        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ★";
+        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ★abcdefghijklmnopqrstuvwxyz";
 		for (let i = 0; i < this.numRows + 1; i++) {
 			str += "<tr>";
 			if (i === this.numRows) {
@@ -262,6 +263,9 @@ class Scrabble extends Games.Game {
 	 */
 	getPoints(oldLetter, newLetter) {
 		let points = charpoints[newLetter.toLowerCase()];
+		if (newLetter === newLetter.toLowerCase()) {
+			return [0, 1];
+		}
 		if (oldLetter === newLetter) {
 			return [points, 1];
 		}
@@ -309,11 +313,15 @@ class Scrabble extends Games.Game {
 		if (this.board[7][7] === "★" && copyboard[7][7] === "★") {
 			return "Your turn must use the center ★ square.";
 		}
-		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefhijklmnopqrstuvwxyz";
 		let copyhand = this.hands.get(player).slice();
 		for (let i = 0; i < this.numRows; i++) {
 			for (let j = 0; j < this.numCols; j++) {
 				if (copyboard[i][j] !== this.board[i][j]) {
+					if (copyboard[i][j] == this.board[i][j].toUpperCase() && copyboard[i][j] !== this.board[i][j]) {
+						copyboard[i][j] = this.board[i][j];
+						continue;
+					}
 					if (letters.indexOf(this.board[i][j]) !== -1) return "You cannot replace one of the tiles on the board.";
 					let letter = copyboard[i][j];
 					let index = copyhand.indexOf(letter);
@@ -321,6 +329,7 @@ class Scrabble extends Games.Game {
 					if (actindex === -1) {
 						return "That uses a letter at " + letters[j] + (this.numRows - i) + " that you don't have!";
 					}
+					if (actindex === copyhand.indexOf(" ")) copyboard[i][j] = copyboard[i][j].toLowerCase();
 					copyhand = copyhand.slice(0, actindex) + copyhand.slice(actindex + 1);
 				}
 			}
@@ -391,6 +400,7 @@ class Scrabble extends Games.Game {
 		if (copyhand.length === this.hands.get(player).length) return "You have to use at least one tile...";
 		if (copyhand.length === 0 && this.hands.get(player).length === 7) totpoints += 50;
 		this.hands.set(player, copyhand);
+		this.board = copyboard;
 		return totpoints;
 	}
 
@@ -409,7 +419,7 @@ class Scrabble extends Games.Game {
 	 */
 	doesConnect(loc, direction, word) {
 		if (this.board[7][7] === "★") return true;
-		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		let realloc = loc.slice();
 		let directions = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 		for (let i = 0; i < word.length; i++) {
@@ -464,7 +474,9 @@ class Scrabble extends Games.Game {
 				if (loc[1] >= this.numRows) {
 					return this.say("Playing that word at that location would go off the edge of the board!");
 				}
+				let isLowerCase = !!("abcdefghijklmnopqrstuvwxyz".indexOf(copyboard[loc[0]][loc[1]]) === -1);
 				copyboard[loc[0]][loc[1]] = word[i];
+				if (isLowerCase) copyboard[loc[0]][loc[1]] = copyboard[loc[0]][loc[1]].toLowerCase();
 				loc[1]++;
 			}
 		} else {
@@ -503,7 +515,7 @@ class Scrabble extends Games.Game {
 		for (let userID in this.players) {
 			let player = this.players[userID];
 			let hand = this.hands.get(player);
-			let pointsLost = hand.split("").map((/** @type {string} */ letter) => letter === " " ? 50 : charpoints[letter.toLowerCase()]).reduce((/** @type {number} */ a, /** @type {number} */ b) => a + b, 0);
+			let pointsLost = hand.split("").map((/** @type {string} */ letter) => letter === " " ? 0 : charpoints[letter.toLowerCase()]).reduce((/** @type {number} */ a, /** @type {number} */ b) => a + b, 0);
 			this.points.set(player, this.points.get(player) - pointsLost);
 		}
 		for (let userID in this.players) {
