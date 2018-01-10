@@ -153,11 +153,8 @@ class Scrabble extends Games.Game {
 		if (!this.started) return;
 		let player = this.players[user.id];
 		let index = this.playerOrder.indexOf(player);
-		console.log(index + ", " + this.num);
 		if (index <= this.num) this.num--;
-		console.log(index + ", " + this.num);
 		this.playerOrder.splice(this.playerOrder.indexOf(player), 1);
-		console.log(this.playerOrder);
 		player.points = 0;
 		if (this.getRemainingPlayerCount() === 1) return this.end();
 		if (player === this.curPlayer) this.nextPlayer();
@@ -474,9 +471,7 @@ class Scrabble extends Games.Game {
 				if (loc[1] >= this.numRows) {
 					return this.say("Playing that word at that location would go off the edge of the board!");
 				}
-				let isLowerCase = !!("abcdefghijklmnopqrstuvwxyz".indexOf(copyboard[loc[0]][loc[1]]) === -1);
 				copyboard[loc[0]][loc[1]] = word[i];
-				if (isLowerCase) copyboard[loc[0]][loc[1]] = copyboard[loc[0]][loc[1]].toLowerCase();
 				loc[1]++;
 			}
 		} else {
