@@ -36,13 +36,12 @@ class Room {
 		user.rooms.set(this, rank);
 		if (user.id === Tools.toId(Config.username)) return;
 		if (this.id.startsWith('groupchat')) {
-			let scrabbleauth = user.rooms.get(global.Rooms.get('scrabble'));
+			let scrabbleauth = scrabauth[user.id];
+			if (!scrabbleauth) return;
 			let roomauth = user.rooms.get(this);
 			if (scrabbleauth === "#") scrabbleauth = "@";
 			if (scrabbleauth === "+") scrabbleauth = "%";
-			if (Config.groups[scrabbleauth] >= Config.groups[roomauth]) {
-				this.say("/roompromote " + user.id + ", " + scrabbleauth);
-			}
+			this.say("/roompromote " + user.id + ", " + scrabbleauth);
 		}
 	}
 
