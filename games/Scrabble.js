@@ -310,7 +310,7 @@ class Scrabble extends Games.Game {
 		if (this.board[7][7] === "★" && copyboard[7][7] === "★") {
 			return "Your turn must use the center ★ square.";
 		}
-		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefhijklmnopqrstuvwxyz";
+		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		let copyhand = this.hands.get(player).slice();
 		for (let i = 0; i < this.numRows; i++) {
 			for (let j = 0; j < this.numCols; j++) {

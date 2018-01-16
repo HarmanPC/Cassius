@@ -140,7 +140,7 @@ class MessageParser {
 			global.scrabauth = scrabauth;
 		case 'init':
 			room.onJoin(Users.self, ' ');
-			if (!global.awaitingscrab && room.id.startsWith('groupchat')) return room.say("/deleteroom " + room.id);
+			if (!global.awaitingscrab && room.id.startsWith('groupchat') && Config.commandCharacter === '.') return room.say("/deleteroom " + room.id);
 			console.log('Joined room: ' + room.id);
 			if (room.id === 'scrabble') {
 				room.say("/roomauth scrabble");

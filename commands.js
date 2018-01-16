@@ -192,8 +192,9 @@ let commands = {
 		if (!Games.createGame(target, room)) return;
 		room.game.signups();
 	},
+
 	scrabblegame: function (target, room, user) {
-		if (!user.hasRank(Rooms.get('scrabble'), '%')) return;
+		if (!user.hasRank(Rooms.get('scrabble'), '+')) return;
 		let i = 1;
 		while (Rooms.get("groupchat-scrabblee-scrabble" + i)) {
 			i += 1;
@@ -203,6 +204,7 @@ let commands = {
 		global.notimer = !!(["notimer", "nt"].indexOf(Tools.toId(target)) !== -1);
 		Rooms.get('scrabble').say("/makegroupchat scrabble" + i);
 	},
+
 	games: function (target, room, user) {
 		if (!user.hasRank(Rooms.get('scrabble'), '%')) return;
 		let scrabrooms = [];
@@ -216,25 +218,34 @@ let commands = {
 			return room.say("Current Scrabble games: " + scrabrooms.join(", "));
 		}
 	},
+
 	start: 'startgame',
 	startgame: function (target, room, user) {
 		if (!room.game || !user.hasRank(room, '+')) return;
 		room.game.start();
 	},
+
 	end: 'endgame',
 	endgame: function (target, room, user) {
 		if (!room.game || !user.hasRank(room, '+')) return;
 		room.game.forceEnd();
 	},
+
 	join: 'joingame',
 	joingame: function (target, room, user) {
 		if (!room.game) return;
 		room.game.join(user);
 	},
+
 	leave: 'leavegame',
 	leavegame: function (target, room, user) {
 		if (!room.game) return;
 		room.game.leave(user);
+	},
+
+	dq: function (target, room, user) {
+		if (!user.hasRank(room.id, '%') || !room.game) return;
+		room.game.dq(target);
 	},
 
 	//memes
@@ -330,6 +341,7 @@ let commands = {
 		dd.addFirst(target);
 		room.say("First place points awarded to **" + target.trim() + "** on the " + dd.name + " leaderboard.");
 	},
+
 	seconds: 'second',
 	second: function (target, room, user) {
 		if (!target) return;
@@ -464,6 +476,7 @@ let commands = {
 			room.say("**" + target + "** has never placed third on the " + dd.name + " leaderboard.!");
 		}
 	},
+
 	removeparts: 'removepart',
 	removeparticipation: 'removepart',
 	rmpart: 'removepart',

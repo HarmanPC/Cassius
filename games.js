@@ -286,6 +286,17 @@ class Game {
 	}
 
 	/**
+	 * @param {string} target
+	 */
+	dq(target) {	
+		let player = this.players[Tools.toId(target)];
+		if (!player || player.eliminated) return;
+		player.eliminated = true;
+		this.say(player.name + " was DQed.");
+		if (typeof this.onLeave === 'function') this.onLeave(Users.get(player.id));
+	}
+
+	/**
 	 * @param {{[k: string]: Player}} [players]
 	 * @return {string}
 	 */
