@@ -261,7 +261,7 @@ class Scrabble extends Games.Game {
 	getPoints(oldLetter, newLetter) {
 		let points = charpoints[newLetter.toLowerCase()];
 		if (newLetter === newLetter.toLowerCase()) {
-			return [0, 1];
+			points = 0;
 		}
 		if (oldLetter === newLetter) {
 			return [points, 1];
