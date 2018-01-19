@@ -157,7 +157,10 @@ class Scrabble extends Games.Game {
 		this.playerOrder.splice(this.playerOrder.indexOf(player), 1);
 		player.points = 0;
 		if (this.getRemainingPlayerCount() === 1) return this.end();
-		if (player === this.curPlayer) this.nextPlayer();
+		if (player === this.curPlayer) {
+			if (this.timeout) clearTimeout(this.timeout);
+			this.nextPlayer();
+		}
 	}
 
     onStart() {
