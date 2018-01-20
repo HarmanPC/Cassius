@@ -206,7 +206,6 @@ class Game {
 			this.parentGame.forceEnd();
 			return;
 		}
-		if (typeof this.onEnd === 'function') this.onEnd();
 		this.say("The game was forcibly ended.");
 		this.ended = true;
 		this.room.game = null;
@@ -289,6 +288,7 @@ class Game {
 	 * @param {string} target
 	 */
 	dq(target) {	
+		console.log("ay lmao");
 		let player = this.players[Tools.toId(target)];
 		if (!player || player.eliminated) return;
 		player.eliminated = true;

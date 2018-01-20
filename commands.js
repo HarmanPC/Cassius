@@ -244,7 +244,8 @@ let commands = {
 	},
 
 	dq: function (target, room, user) {
-		if (!user.hasRank(room.id, '%') || !room.game) return;
+		console.log("ay lmao");
+		if (!user.hasRank(room, '%') || !room.game) return;
 		room.game.dq(target);
 	},
 
