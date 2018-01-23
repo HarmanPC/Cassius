@@ -56,7 +56,7 @@ class Room {
 		if (this.id === 'scrabble' && user.id in this.intros) {
 			let info = this.intros[user.id];
 			if (info.waiting) return;
-			console.log(info.msg);
+			this.say(info.msg);
 			info.waiting = true;
 			setTimeout(() => this.allowIntro(user.id), this.cooldown * 1000)
 		}
