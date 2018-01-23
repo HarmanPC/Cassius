@@ -217,7 +217,9 @@ class Scrabble extends Games.Game {
 	 */
     sayHand(player) {
 		let user = Users.get(player.id);
-		if (!user.rooms.has(Rooms.get('scrabble'))) return user.say("You must be in the Scrabble room for me to give you your hand.");
+		if (!user.rooms.has(Rooms.get('scrabble'))) {
+			return user.say("Your current hand: " + this.hands.get(player).split("").join(",") + " if you would like it to be formatted better, join <<scrabble>>");
+		}
 		player.say("Your hand: ");
 		let tiles = this.hands.get(player);
 		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
@@ -622,13 +624,8 @@ class Scrabble extends Games.Game {
 		if (!player || player.eliminated || !this.started) return;
 		target = Tools.toId(target);
 		let hand = this.hands.get(player);
-		let sorted = target.split("").sort();
-		let sortedhand = hand.sort();
-		if (sorted.length !== sortedhand.length) return player.say("Invalid rearrangement");
-		for (let i = 0; i < sorted.length; i++) {
-			if (sorted[i] !== sortedhand[i]) return player.say("Invalid rearrangement");
-		}
-		this.hands.set(player, target.split(""));
+		hand = Tools.shuffle(hand.split("")).join("");
+		this.hands.set(player, hand);
 		this.sayHand(player);
 	}
 }
