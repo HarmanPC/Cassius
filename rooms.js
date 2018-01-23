@@ -31,7 +31,7 @@ class Room {
 				waiting: false,
 			},
 		};
-		this.cooldown = 300;
+		this.cooldown = 3600;
 	}
 
 	/**
