@@ -209,6 +209,7 @@ class Game {
 		this.say("The game was forcibly ended.");
 		this.ended = true;
 		this.room.game = null;
+		this.say("/deleteroom " + this.room.id);
 	}
 
 	nextRound() {

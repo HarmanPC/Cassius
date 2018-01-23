@@ -64,12 +64,12 @@ const charpoints = {
 };
 
 const colors = {
-    DL: "#EDB4A4",
-    TL: "#3D95AB",
-    DW: "#BF9289",
-    "★": "#BF9289",
-    TW: "#B03E2B",
-    "-": "#CAC3A7",
+    DL: "#C0D5D0",
+    TL: "#489AAB",
+    DW: "#F8B7A2",
+    "★": "#F8B7A2",
+    TW: "#FF6251",
+    "-": "#CCC5A8",
 }
 
 /**
@@ -79,7 +79,7 @@ function getColor(tile) {
     if (tile in colors) {
         return colors[tile];
     }
-    return "#CAC3A7";
+    return "#CCC5A8";
 }
 
 const name = "Scrabble";

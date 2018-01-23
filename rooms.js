@@ -25,6 +25,13 @@ class Room {
 		this.listeners = {};
 		/**@type {?Game} */
 		this.game = null;
+		this.intros = {
+			hnbl: {
+				msg: "bro dont hate the player, this game is whack af",
+				waiting: false,
+			},
+		};
+		this.cooldown = 300;
 	}
 
 	/**
@@ -45,6 +52,21 @@ class Room {
 				this.say("/roompromote " + user.id + ", " + scrabbleauth);
 			}
 		}
+
+		if (this.id === 'scrabble' && user.id in this.intros) {
+			let info = this.intros[user.id];
+			if (info.waiting) return;
+			console.log(info.msg);
+			info.waiting = true;
+			setTimeout(() => this.allowIntro(user.id), this.cooldown * 1000)
+		}
+	}
+
+	/**
+	 * @param {string} userID
+	 */
+	allowIntro(userID) {
+		this.intros[userID].waiting = false;
 	}
 
 	/**
