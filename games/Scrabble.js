@@ -144,6 +144,7 @@ class Scrabble extends Games.Game {
 		this.points = new Map();
 		this.num = -1;
 		this.playerOrder = [];
+		this.numTurnsWithoutPlay = 0;
 	}
 
 	/**
@@ -190,6 +191,11 @@ class Scrabble extends Games.Game {
 	}
 
 	nextPlayer() {
+		if (this.numTurnsWithoutPlay === 4 * this.getRemainingPlayerCount()) {
+			this.say("Since the game has gone **" + this.numTurnsWithoutPlay + "** turns without anyone scoring, the game ends!");
+			this.end();
+			return;
+		}
 		this.num++;
 		if (this.num >= this.playerOrder.length) {
 			this.num = 0;
@@ -207,6 +213,7 @@ class Scrabble extends Games.Game {
 	}
 
 	skipPlayer() {
+		this.numTurnsWithoutPlay++;
 		this.say("**" + this.curPlayer.name + "** didn't play anything!");
 		this.curPlayer = null;
 		this.timeout = setTimeout(() => this.nextPlayer(), 5 * 1000);
@@ -505,6 +512,7 @@ class Scrabble extends Games.Game {
 				this.end();
 				return;
 			}
+			this.numTurnsWithoutPlay = 0;
 			this.hands.set(player, hand);
 			this.sayHand(player);
 			this.nextPlayer();
@@ -562,6 +570,7 @@ class Scrabble extends Games.Game {
 		this.sayHand(player);
 		this.say("**" + player.name + "** has decided to pass!");
 		if (this.timeout) clearTimeout(this.timeout);
+		this.numTurnsWithoutPlay++;
 		this.nextPlayer();
 	}
 
