@@ -11,12 +11,17 @@ class DD {
 		this.secondpoints = 3;
 		this.partpoints = 2;
 		this.name = "Scrabblemons";
+		/** @type {any} */
+		this.backupInterval = null;
 	}
 
 	getNameIndex() {
 		return 3;
 	}
 	
+	/**
+	 * @param {number} num
+	 */
 	getStr(num) {
 		let sorted = this.getSorted();
 		let str = "<div class = \"infobox\"><html><body><table align=\"center\" border=\"2\"><tr>";
@@ -58,6 +63,9 @@ class DD {
 		fs.writeFileSync('./databases/scrabmonlb.json', JSON.stringify(this.lb));
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	addFirst(user) {
 		let id = Tools.toId(user.trim());
 		if (!(id in this.lb)) {
@@ -72,6 +80,9 @@ class DD {
 		}
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	addSecond(user) {
 		let id = Tools.toId(user.trim());
 		if (!(id in this.lb)) {
@@ -86,6 +97,9 @@ class DD {
 		}
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	addPart(user) {
 		let id = Tools.toId(user.trim());
 		if (!(id in this.lb)) {
@@ -100,6 +114,9 @@ class DD {
 		}
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	removeFirst(user) {
 		let id = Tools.toId(user);
 		if (!(id in this.lb) || this.lb[id].firsts === 0) {
@@ -110,6 +127,9 @@ class DD {
 		}
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	removeSecond(user) {
 		let id = Tools.toId(user);
 		if (!(id in this.lb) || this.lb[id].seconds === 0) {
@@ -120,6 +140,9 @@ class DD {
 		}
 	}
 
+	/**
+	 * @param {string} user
+	 */
 	removePart(user) {
 		let id = Tools.toId(user);
 		if (!(id in this.lb) || this.lb[id].parts === 0) {
@@ -130,6 +153,10 @@ class DD {
 		}
 	}
 
+	/**
+	 * 
+	 * @param {number[]} item 
+	 */
 	getPoints(item) {
 		return this.firstpoints * item[0] + this.secondpoints * item[1] + this.partpoints * item[2];
 	}
@@ -140,7 +167,8 @@ class DD {
 			let item = this.lb[id];
 			items.push([item.firsts, item.seconds, item.parts, item.name]);
 		}
-		items.sort(function(first, second) {
+		// @ts-ignore
+		items.sort(function (first, second) {
 			let points1 = dd.getPoints(first);
 			let points2 = dd.getPoints(second);
 			if (points1 !== points2) return points2 - points1;
