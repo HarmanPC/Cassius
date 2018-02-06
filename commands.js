@@ -96,6 +96,28 @@ let commands = {
 		if (!user.hasRank(room, '+')) return;	
 		room.say('/addhtmlbox <font style="color: Red;"><b> Welcome to Scrabble! Click to play! </b></font><a href="https://en.crosswordsarena.com/" target="_blank"><button style="background-color: #c90100; border-radius: 5px; border: solid, 1px, white; color: white; font-size: 12px; padding: 3px 5px; font-weight: bold; auto; box-shadow:2px 2px black; transform: skew(-15deg);display:inline-block;margin-top:10px"><span style="font-size:1.25em; text-shadow:2px 2px black">Play!</span></button></a>');
 	},
+
+	timer: function (target, room, user) {
+		if (!user.hasRank(room, '+') || room === user) return;
+		target = Tools.toId(target);
+		if (room.timer) {
+			if (target === 'end' || target === 'stop') {
+				clearTimeout(room.timer);
+				room.timer = null;
+				return room.say("The timer has been ended.");
+			} else {
+				return room.say("There is already a timer running in this room.");
+			}
+		}
+
+		let time = parseFloat(target);
+		if (!time || time > 600) return room.say("The timer must be between 11 seconds and 10 minutes.");
+		if (time < 11) time *= 60;
+		let minutes = Math.floor(time / 60);
+		let seconds = time % 60;
+		room.timer = setTimeout(() => room.sayTimeUp(), time * 1000);
+		room.say("Timer set for " + (minutes > 0 ? ((minutes) + " minute" + (minutes > 1 ? "s" : "")) + (seconds > 0 ? " and " : "") : "") + (seconds > 0 ? ((seconds) + " second" + (seconds > 1 ? "s" : "")) : "") + ".");
+	},
 	
 	dab: function (target, room, user) {
 		if (room !== user && !user.hasRank(room, '+')) return;

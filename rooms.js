@@ -32,6 +32,12 @@ class Room {
 			},
 		};
 		this.cooldown = 3600;
+		this.timer = null;
+	}
+
+	sayTimeUp() {
+		this.say("**Time's up!**");
+		this.timer = null;
 	}
 
 	/**
