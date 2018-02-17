@@ -58,12 +58,12 @@ let commands = {
 	},
 
 	beep: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
+		if (room !== user && room.id !== 'scrabble' && !user.hasRank(room, '+')) return;
 		room.say("boop");
 	},
 	
 	hug: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
+		if (room !== user && room.id !== 'scrabble' && !user.hasRank(room, '+')) return;
 		room.say("/me hugs " + target);
 	},
 	
@@ -120,7 +120,7 @@ let commands = {
 	},
 	
 	dab: function (target, room, user) {
-		if (room !== user && !user.hasRank(room, '+')) return;
+		if (room !== user && room.id !== 'scrabble' && !user.hasRank(room, '+')) return;
 		room.say("/me dabs");
 	},
 	
@@ -273,7 +273,8 @@ let commands = {
 
 	//memes
 	topaz: function (target, room, user) {
-		if (!user.hasRank(room, '+')) return;
+		
+		if (room.id !== 'scrabble' && !user.hasRank(room, '+')) return;
 		room.say("!dt Excadrill");
 	},
 	
