@@ -51,6 +51,15 @@ class User {
 	}
 
 	/**
+	 * @param {Room | User} room
+	 * @return {boolean}
+	 */
+	canUseBasicCommands(room) {
+		let requiredRank = room.id.startsWith("groupchat") ? '%' : '+';
+		return this.hasRank(room, requiredRank);
+	}
+
+	/**
 	 * @return {boolean}
 	 */
 	isDeveloper() {
