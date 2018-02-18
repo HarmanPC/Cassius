@@ -179,9 +179,9 @@ let commands = {
 	
 	check: function (target, room, user) {
 		if (room !== user && !user.canUseBasicCommands(room)) return;
-		if (scrabwords.indexOf(Tools.toId(target).toUpperCase()) !== -1) { this.say("__**" + target + "**__ is a valid word!"); }
+		if (scrabwords.indexOf(Tools.toId(target).toUpperCase()) !== -1) { this.say("__**" + Tools.toId(target) + "**__ is a valid word!"); }
 		else {
-			room.say("__**" + target + "**__ is NOT a valid word!");
+			room.say("__**" + Tools.toId(target) + "**__ is NOT a valid word!");
 		}
 	},
 	
