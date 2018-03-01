@@ -126,9 +126,10 @@ class MessageParser {
 			break;
 		case 'popup':
 			let msg = splitMessage.join("|").split("||||");
-			if (msg.length !== 6) return;
+			if (msg.length < 5) return;
+
 			let scrabauth = {};
-			for (let i = 0; i < msg.length - 1; i++) {
+			for (let i = 0; i < msg.length - 2; i++) {
 				let curLine = msg[i].split("||");
 				let auth = curLine[0][curLine[0].indexOf("(") + 1];
 				curLine = curLine[1].split(",");
