@@ -126,25 +126,25 @@ class MessageParser {
 			break;
 		case 'popup':
 			let msg = splitMessage.join("|").split("||||");
+			if (msg.length < 5) return;
+
 			let scrabauth = {};
-			for (let i = 0; i < msg.length - 1; i++) {
+			for (let i = 0; i < msg.length - 2; i++) {
 				let curLine = msg[i].split("||");
 				let auth = curLine[0][curLine[0].indexOf("(") + 1];
-				console.log(auth);
 				curLine = curLine[1].split(",");
 				for (let k = 0; k < curLine.length; k++) {
 					scrabauth[Tools.toId(curLine[k])] = auth;
-					console.log(Tools.toId(curLine[k]));
 				}
 			}
 			global.scrabauth = scrabauth;
 		case 'init':
 			room.onJoin(Users.self, ' ');
-			if (!global.awaitingscrab && room.id.startsWith('groupchat') && Config.commandCharacter === '.') return room.say("/deleteroom " + room.id);
-			console.log('Joined room: ' + room.id);
 			if (room.id === 'scrabble') {
 				room.say("/roomauth scrabble");
 			}
+			if (!global.awaitingscrab && room.id.startsWith('groupchat') && Config.commandCharacter === '.') return room.say("/deleteroom " + room.id);
+			console.log('Joined room: ' + room.id);
 			if (room.id.startsWith("groupchat") && global.awaitingscrab) {
 				Games.createGame('scrabble', room);
 				if (global.notimer) room.game.roundTimer = 120000;

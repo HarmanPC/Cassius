@@ -568,7 +568,7 @@ class Scrabble extends Games.Game {
 		this.tiles = copytiles;
 		this.hands.set(player, hand);
 		this.sayHand(player);
-		this.say("**" + player.name + "** has decided to pass!");
+		this.say("**" + player.name + "** has decided to pass " + target.length + " tiles!");
 		if (this.timeout) clearTimeout(this.timeout);
 		this.numTurnsWithoutPlay++;
 		this.nextPlayer();

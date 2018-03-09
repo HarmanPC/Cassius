@@ -178,8 +178,10 @@ let commands = {
 	},
 	
 	check: function (target, room, user) {
-		if (room !== user && !user.canUseBasicCommands(room)) return;
-		if (scrabwords.indexOf(Tools.toId(target).toUpperCase()) !== -1) { this.say("__**" + Tools.toId(target) + "**__ is a valid word!"); }
+		if (room !== user && !user.hasRank(room, '+')) return;
+		if (scrabwords.indexOf(Tools.toId(target).toUpperCase()) !== -1) { 
+      this.say("__**" + Tools.toId(target) + "**__ is a valid word!"); 
+    }
 		else {
 			room.say("__**" + Tools.toId(target) + "**__ is NOT a valid word!");
 		}
@@ -379,16 +381,8 @@ let commands = {
 		for (let i = 0; i < split.length; i++) {
 			dd.addPart(split[i]);
 		}
-		let msg = "Participation points awarded to: **" + split.join(", ") + "**.";
-		if (msg.length > 300) {
-			let len = split.length;
-			let firstHalf = split.slice(0, Math.floor(len / 2.0));
-			let secondHalf = split.slice(Math.floor(len / 2.0));
-			room.say("Participations points awarded to: **" + firstHalf.join(", ") + "**.");
-			room.say("and **" + secondHalf.join(", ") + "**.");
-		} else {
-			room.say(msg);
-		}
+		let msg = "Participation points awarded to: **" + split.join(", ") + "** on the " + dd.name + " leaderboard.";
+		room.say(msg);
 	},
 
 	rmfirst: 'removefirst',
@@ -504,11 +498,11 @@ let commands = {
 			}
 		}
 		if (good.length > 0 && bad.length > 0) {
-			room.say("Participations removed from: **" + good.join(", ") + "**. I was unable to remove participation from **" + bad.join(", ") + "**.");
+			room.say("Participations removed from: **" + good.join(", ") + "**. I was unable to remove participation from **" + bad.join(", ") + "** on the " + dd.name + " leaderboard.");
 		} else if (good.length > 0) {
-			room.say("Participations removed from: **" + good.join(", ") + "**.");
+			room.say("Participations removed from: **" + good.join(", ") + "** on the " + dd.name + " leaderboard.");
 		} else {
-			room.say("I was unable to remove participations from **" + bad.join(", ") + "**.");
+			room.say("I was unable to remove participations from **" + bad.join(", ") + "** on the " + dd.name + " leaderboard.");
 		}
 	},
 
