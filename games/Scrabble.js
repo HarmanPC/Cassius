@@ -167,7 +167,7 @@ class Scrabble extends Games.Game {
     onStart() {
 		this.say("/modchat +");
 		this.say("To check some info about the point values of letters, visit http://www.thewordfinder.com/scrabble-point-values.php/");
-		let commandNames = ["playword", "pass", "showboard", "scores", "tilesleft", "hand", "rearrange"];
+		let commandNames = ["play", "pass", "showboard", "scores", "tilesleft", "hand", "rearrange"];
 		this.say("Command list: " + commandNames.map(command => "``" + Config.commandCharacter + command  + "``").join(", "));
 		for (let userID in this.players) {
 			let player = this.players[userID];
@@ -203,7 +203,7 @@ class Scrabble extends Games.Game {
 		this.curPlayer = this.playerOrder[this.num];
 		this.displayBoard();
 		this.canPlay = true;
-		this.say("/wall " + this.curPlayer.name + ", you're up! Commands: ``" + Config.commandCharacter + "playword [location], right/down, word``, or in PMs, ``" + Config.commandCharacter + "pass [letters]``");
+		this.say("/wall " + this.curPlayer.name + ", you're up! Commands: ``" + Config.commandCharacter + "play [location], right/down, word``, or in PMs, ``" + Config.commandCharacter + "pass [letters]``");
 		this.timeout = setTimeout(() => this.remindPlayer(), this.roundTimer * 2 / 3 * 1000);
 	}
 
@@ -644,6 +644,7 @@ exports.name = name;
 exports.id = id;
 exports.commands = {
 	playword: "playword",
+	play: "playword",
 	pass: "pass",
 	showboard: "showboard",
 	scores: "scores",

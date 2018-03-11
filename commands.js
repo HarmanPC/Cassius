@@ -70,11 +70,6 @@ let commands = {
 		room.say("this is why I don't play with timer.");
 	},
 
-	play: function (target, room, user) {
-		if (!user.canUseBasicCommands(room)) return;	
-		room.say('/addhtmlbox <font style="color: Red;"><b> Welcome to Scrabble! Click to play! </b></font><a href="https://en.crosswordsarena.com/" target="_blank"><button style="background-color: #c90100; border-radius: 5px; border: solid, 1px, white; color: white; font-size: 12px; padding: 3px 5px; font-weight: bold; auto; box-shadow:2px 2px black; transform: skew(-15deg);display:inline-block;margin-top:10px"><span style="font-size:1.25em; text-shadow:2px 2px black">Play!</span></button></a>');
-	},
-
 	timer: function (target, room, user) {
 		if (!user.canUseBasicCommands(room) || room === user) return;
 		target = Tools.toId(target);
