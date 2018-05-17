@@ -199,7 +199,7 @@ let commands = {
 		global.awaitingscrab = true;
 		global.scrabroom = room;
 		global.notimer = !!(["notimer", "nt"].indexOf(Tools.toId(target)) !== -1);
-		Rooms.get('scrabble').say("/makegroupchat scrabble" + i);
+		Rooms.get('scrabble').say("/subroomgroupchat scrabble" + i);
 	},
 
 	games: function (target, room, user) {

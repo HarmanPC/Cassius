@@ -114,6 +114,7 @@ class Room {
 	 * @param {string} message
 	 */
 	say(message) {
+		console.log(message + "," + this.id);
 		message = Tools.normalizeMessage(message, this);
 		if (!message) return;
 		Client.send(this.clientId + '|' + message);

@@ -97,6 +97,7 @@ class MessageParser {
 	 * @param {Room} room
 	 */
 	parse(message, room) {
+		console.log(message);
 		let splitMessage = message.split('|').slice(1);
 		let messageType = splitMessage[0];
 		splitMessage.shift();
